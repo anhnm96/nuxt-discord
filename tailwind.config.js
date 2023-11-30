@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 export default {
   content: [
     './components/**/*.{js,vue,ts}',
@@ -10,6 +12,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Whitney', 'Open Sans', ...defaultTheme.fontFamily.sans],
+        title: ['Ginto', 'Open Sans', ...defaultTheme.fontFamily.sans],
+      },
       colors: {
         gray: {
           50: '#ECEDEE',
