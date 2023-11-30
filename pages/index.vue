@@ -2,7 +2,7 @@
   <div class="flex h-screen text-gray-100">
     <div class="space-y-2 overflow-y-scroll bg-gray-900 p-3">
       <div
-        class="hover:bg-brand flex h-12 w-12 items-center justify-center rounded-full bg-gray-700 text-gray-100 transition duration-200 hover:text-white"
+        class="hover:bg-brand flex h-12 w-12 items-center justify-center rounded-3xl bg-gray-700 text-gray-100 transition-all duration-200 hover:rounded-2xl hover:text-white"
       >
         <svg class="h-5 w-7" aria-hidden="false" viewBox="0 0 28 20">
           <path
