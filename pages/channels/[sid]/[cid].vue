@@ -1,80 +1,14 @@
 <script setup lang="ts">
-interface Server {
-  id: string
-  label: string
-  categories: Category[]
-}
+import { data } from '@/data'
+import type { Channel } from '@/types'
 
-interface Category {
-  id: string
-  label: string
-  channels: Channel[]
-}
+const route = useRoute()
+const server = data[`${route.params.sid}`]
+const selectedChannel = server.categories
+  .map((c) => c.channels)
+  .flat()
+  .find((channel) => channel.id === route.params.cid) as Channel
 
-interface Channel {
-  id: string
-  label: string
-  icon?: string
-  unread?: boolean
-}
-const data: Record<string, Server> = {
-  '1': {
-    id: '1',
-    label: 'Tailwind CSS',
-    categories: [
-      {
-        id: '1',
-        label: '',
-        channels: [
-          { id: '1', label: 'welcome', icon: 'ic:baseline-library-books' },
-          {
-            id: '2',
-            label: 'announcements',
-            icon: 'heroicons-solid:speakerphone',
-          },
-        ],
-      },
-      {
-        id: '2',
-        label: 'Tailwind CSS',
-        channels: [
-          { id: '3', label: 'general', unread: true },
-          { id: '4', label: 'plugins', unread: true },
-          { id: '5', label: 'help', unread: true },
-          { id: '6', label: 'internals' },
-        ],
-      },
-      {
-        id: '3',
-        label: 'Tailwind Labs',
-        channels: [
-          { id: '7', label: 'tailwind-ui' },
-          { id: '8', label: 'headless-ui' },
-          { id: '9', label: 'refactoring-ui', unread: true },
-          { id: '10', label: 'heroicons', unread: true },
-        ],
-      },
-      {
-        id: '4',
-        label: 'Off topic',
-        channels: [
-          { id: '11', label: 'design' },
-          { id: '12', label: 'development' },
-          { id: '13', label: 'random', unread: true },
-        ],
-      },
-      {
-        id: '5',
-        label: 'Community',
-        channels: [
-          { id: '14', label: 'jobs' },
-          { id: '15', label: 'showcase', unread: true },
-          { id: '16', label: 'bots' },
-        ],
-      },
-    ],
-  },
-}
 const closedCategories = reactive(new Set<string>([]))
 function toggleCategory(categoryId: string) {
   if (closedCategories.has(categoryId)) {
@@ -160,8 +94,51 @@ function toggleCategory(categoryId: string) {
     </div>
   </div>
 
-  <div class="flex flex-1 flex-col bg-gray-700">
-    <div class="flex h-12 items-center px-3 shadow-sm">general</div>
+  <div class="flex min-w-0 flex-1 flex-shrink flex-col bg-gray-700">
+    <div class="flex h-12 items-center px-2 shadow-sm">
+      <div class="flex items-center">
+        <Icon
+          class="mx-2 font-semibold text-gray-400"
+          size="24px"
+          name="mdi:hashtag"
+        />
+        <span class="mr-2 font-title text-white">{{
+          selectedChannel.label
+        }}</span>
+      </div>
+
+      <template v-if="selectedChannel.description">
+        <div class="mx-2 h-6 w-px bg-white/[.06]"></div>
+        <div class="mx-2 truncate text-sm font-medium text-gray-200">
+          {{ selectedChannel.description }}
+        </div>
+      </template>
+
+      <div class="ml-auto flex items-center">
+        <button class="text-gray-200 hover:text-gray-100">
+          <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
+        </button>
+        <button class="text-gray-200 hover:text-gray-100">
+          <Icon class="mx-2" size="24px" name="mdi:bell" />
+        </button>
+        <button class="text-gray-200 hover:text-gray-100">
+          <Icon class="mx-2" size="24px" name="tabler:pin-filled" />
+        </button>
+        <button class="text-gray-200 hover:text-gray-100">
+          <Icon class="mx-2" size="24px" name="mdi:people" />
+        </button>
+        <button class="text-gray-200 hover:text-gray-100">
+          <Icon class="mx-2" size="24px" name="material-symbols:inbox" />
+        </button>
+        <button class="text-gray-200 hover:text-gray-100">
+          <Icon
+            class="mx-2"
+            size="24px"
+            name="ant-design:question-circle-filled"
+          />
+        </button>
+      </div>
+    </div>
     <div class="flex-1 space-y-4 overflow-y-scroll p-3">
       <p v-for="(_, i) in [...Array(40)]" :key="i">
         Message {{ i }}. Lorem ipsum dolor sit amet consectetur adipisicing
