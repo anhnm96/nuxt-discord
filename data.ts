@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import type { Server } from './types'
+import type { Message, Server } from './types'
 
 faker.seed(123)
 
@@ -273,22 +273,20 @@ export const data: Record<string, Server> = {
   },
 }
 
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min) + min) // The maximum is exclusive and the minimum is inclusive
-}
-
 function getMessages(): Message[] {
-  return [...Array(getRandomInt(7, 25))]
+  return [...Array(faker.number.int({ min: 7, max: 25 }))]
     .map(() => {
       const user = faker.internet.userName()
-      const avatarUrl = faker.image.avatar()
+      const avatarUrl = `/avatars/${faker.number.int({
+        min: 0,
+        max: 25,
+      })}.jpg`
 
-      return [...Array(getRandomInt(1, 4))].map(() => ({
+      return [...Array(faker.number.int({ min: 1, max: 4 }))].map(() => ({
+        id: faker.string.nanoid(),
         user,
         avatarUrl,
-        date: '01/15/2021',
+        date: new Date(faker.date.past()).toLocaleString(),
         text: faker.lorem.sentences(3),
       }))
     })

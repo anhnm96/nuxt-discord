@@ -149,13 +149,38 @@ function toggleCategory(categoryId: string) {
         </button>
       </div>
     </div>
-    <div class="flex-1 space-y-4 overflow-y-scroll p-3">
-      <p v-for="(_, i) in [...Array(40)]" :key="i">
-        Message {{ i }}. Lorem ipsum dolor sit amet consectetur adipisicing
-        elit. Vel saepe laudantium sed reprehenderit incidunt! Hic rem quos
-        reiciendis, fugit quae ratione beatae veniam laborum voluptatem, iusto
-        dolorum, voluptates suscipit quia.
-      </p>
+    <div class="flex-1 overflow-y-scroll">
+      <div v-for="(message, i) in selectedChannel.messages" :key="message.id">
+        <div
+          v-if="
+            i === 0 || message.user !== selectedChannel.messages[i - 1].user
+          "
+          class="mt-[17px] flex py-0.5 pl-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]"
+        >
+          <img
+            class="mr-4 mt-0.5 h-10 w-10 rounded-full"
+            :src="message.avatarUrl"
+            alt=""
+          />
+          <div>
+            <p class="flex items-baseline">
+              <span class="mr-2 font-medium text-green-400">
+                {{ message.user }}
+              </span>
+              <span class="text-xs font-medium text-gray-400">
+                {{ message.date }}
+              </span>
+            </p>
+            <p class="text-gray-100">{{ message.text }}</p>
+          </div>
+        </div>
+        <div
+          v-else
+          class="py-0.5 pl-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]"
+        >
+          <p class="pl-14 text-gray-100">{{ message.text }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -20,6 +20,7 @@ export interface Channel {
 }
 
 export interface Message {
+  id: string
   user: string
   avatarUrl: string
   date: string
