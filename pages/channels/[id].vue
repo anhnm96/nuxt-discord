@@ -1,3 +1,63 @@
+<script setup lang="ts">
+const data = {
+  '1': {
+    label: 'Tailwind CSS',
+    categories: [
+      {
+        id: 1,
+        label: '',
+        channels: [
+          { id: 1, label: 'welcome', icon: 'ic:baseline-library-books' },
+          {
+            id: 2,
+            label: 'announcements',
+            icon: 'heroicons-solid:speakerphone',
+          },
+        ],
+      },
+      {
+        id: 2,
+        label: 'Tailwind CSS',
+        channels: [
+          { id: 3, label: 'general' },
+          { id: 4, label: 'plugins' },
+          { id: 5, label: 'help' },
+          { id: 6, label: 'internals' },
+        ],
+      },
+      {
+        id: 3,
+        label: 'Tailwind Labs',
+        channels: [
+          { id: 7, label: 'tailwind-ui' },
+          { id: 8, label: 'headless-ui' },
+          { id: 9, label: 'refactoring-ui' },
+          { id: 10, label: 'heroicons' },
+        ],
+      },
+      {
+        id: 4,
+        label: 'Off topic',
+        channels: [
+          { id: 11, label: 'design' },
+          { id: 12, label: 'development' },
+          { id: 13, label: 'random' },
+        ],
+      },
+      {
+        id: 5,
+        label: 'Community',
+        channels: [
+          { id: 14, label: 'jobs' },
+          { id: 15, label: 'showcase' },
+          { id: 16, label: 'bots' },
+        ],
+      },
+    ],
+  },
+}
+</script>
+
 <template>
   <div class="flex w-60 flex-col bg-gray-800">
     <button
@@ -10,40 +70,37 @@
       <Icon class="ml-auto" size="18px" name="carbon:chevron-down" />
     </button>
     <!-- channel list -->
-    <div class="mt-[17px] flex-1 overflow-y-scroll font-medium text-gray-300">
-      <div class="space-y-0.5">
-        <a
-          href="#"
-          class="hover:bg-gray-550/[0.16] group mx-2 flex items-center rounded px-2 py-1 text-gray-300 hover:text-gray-100"
+    <div
+      class="flex-1 space-y-[21px] overflow-y-scroll pt-3 font-medium text-gray-300"
+    >
+      <div v-for="category in data['1'].categories" :key="category.id">
+        <button
+          v-if="category.label"
+          class="flex items-center px-0.5 font-title text-xs uppercase tracking-wide"
         >
-          <Icon
-            class="mr-1.5 text-gray-400"
-            size="20px"
-            name="ic:baseline-library-books"
-          />
-          welcome
-          <Icon
-            class="ml-auto text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
-            size="16px"
-            name="material-symbols:person-add"
-          />
-        </a>
-        <a
-          href="#"
-          class="hover:bg-gray-550/[0.16] group mx-2 flex items-center rounded px-2 py-1 text-gray-300 hover:text-gray-100"
-        >
-          <Icon
-            class="mr-1.5 text-gray-400"
-            size="20px"
-            name="heroicons-solid:speakerphone"
-          />
-          announcements
-          <Icon
-            class="ml-auto text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
-            size="16px"
-            name="material-symbols:person-add"
-          />
-        </a>
+          <Icon class="mr-0.5" size="12px" name="carbon:chevron-down" />
+          {{ category.label }}
+        </button>
+
+        <div class="mt-[5px] space-y-0.5">
+          <a
+            v-for="channel in category.channels"
+            :key="channel.id"
+            class="hover:bg-gray-550/[0.16] group mx-2 flex items-center rounded px-2 py-1 text-gray-300 hover:text-gray-100"
+          >
+            <Icon
+              class="mr-1.5 text-gray-400"
+              size="20px"
+              :name="channel.icon || 'mdi:hashtag'"
+            />
+            {{ channel.label }}
+            <Icon
+              class="ml-auto text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
+              size="16px"
+              name="material-symbols:person-add"
+            />
+          </a>
+        </div>
       </div>
     </div>
   </div>
