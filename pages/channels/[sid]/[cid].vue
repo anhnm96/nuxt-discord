@@ -1,6 +1,25 @@
 <script setup lang="ts">
-const data = {
+interface Server {
+  id: string | number
+  label: string
+  categories: Category[]
+}
+
+interface Category {
+  id: string | number
+  label: string
+  channels: Channel[]
+}
+
+interface Channel {
+  id: string | number
+  label: string
+  icon?: string
+  unread?: boolean
+}
+const data: Record<string, Server> = {
   '1': {
+    id: 1,
     label: 'Tailwind CSS',
     categories: [
       {
@@ -19,9 +38,9 @@ const data = {
         id: 2,
         label: 'Tailwind CSS',
         channels: [
-          { id: 3, label: 'general' },
-          { id: 4, label: 'plugins' },
-          { id: 5, label: 'help' },
+          { id: 3, label: 'general', unread: true },
+          { id: 4, label: 'plugins', unread: true },
+          { id: 5, label: 'help', unread: true },
           { id: 6, label: 'internals' },
         ],
       },
@@ -31,8 +50,8 @@ const data = {
         channels: [
           { id: 7, label: 'tailwind-ui' },
           { id: 8, label: 'headless-ui' },
-          { id: 9, label: 'refactoring-ui' },
-          { id: 10, label: 'heroicons' },
+          { id: 9, label: 'refactoring-ui', unread: true },
+          { id: 10, label: 'heroicons', unread: true },
         ],
       },
       {
@@ -41,7 +60,7 @@ const data = {
         channels: [
           { id: 11, label: 'design' },
           { id: 12, label: 'development' },
-          { id: 13, label: 'random' },
+          { id: 13, label: 'random', unread: true },
         ],
       },
       {
@@ -49,7 +68,7 @@ const data = {
         label: 'Community',
         channels: [
           { id: 14, label: 'jobs' },
-          { id: 15, label: 'showcase' },
+          { id: 15, label: 'showcase', unread: true },
           { id: 16, label: 'bots' },
         ],
       },
@@ -76,7 +95,7 @@ const data = {
       <div v-for="category in data['1'].categories" :key="category.id">
         <button
           v-if="category.label"
-          class="flex items-center px-0.5 font-title text-xs uppercase tracking-wide"
+          class="flex w-full items-center px-0.5 font-title text-xs uppercase tracking-wide hover:text-gray-100"
         >
           <Icon class="mr-0.5" size="12px" name="carbon:chevron-down" />
           {{ category.label }}
@@ -95,10 +114,16 @@ const data = {
               :class="[
                 isActive
                   ? 'bg-gray-550/[0.32] text-white'
-                  : 'hover:bg-gray-550/[0.16] text-gray-300 hover:text-gray-100',
+                  : channel.unread
+                    ? 'hover:bg-gray-550/[0.16] active:bg-gray-550/[0.24] text-white'
+                    : 'hover:bg-gray-550/[0.16] active:bg-gray-550/[0.24] text-gray-300 hover:text-gray-100',
               ]"
-              class="group mx-2 flex items-center rounded px-2 py-1"
+              class="group relative mx-2 flex items-center rounded px-2 py-1"
             >
+              <div
+                v-if="!isActive && channel.unread"
+                class="absolute left-0 -ml-2 h-2 w-1 rounded-r-full bg-white"
+              ></div>
               <Icon
                 class="mr-1.5 text-gray-400"
                 size="20px"
