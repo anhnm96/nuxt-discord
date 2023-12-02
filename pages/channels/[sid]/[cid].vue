@@ -83,23 +83,35 @@ const data = {
         </button>
 
         <div class="mt-[5px] space-y-0.5">
-          <a
+          <NuxtLink
             v-for="channel in category.channels"
             :key="channel.id"
-            class="hover:bg-gray-550/[0.16] group mx-2 flex items-center rounded px-2 py-1 text-gray-300 hover:text-gray-100"
+            v-slot="{ isActive, href }"
+            :to="`/channels/${$route.params.sid}/${channel.id}`"
+            custom
           >
-            <Icon
-              class="mr-1.5 text-gray-400"
-              size="20px"
-              :name="channel.icon || 'mdi:hashtag'"
-            />
-            {{ channel.label }}
-            <Icon
-              class="ml-auto text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
-              size="16px"
-              name="material-symbols:person-add"
-            />
-          </a>
+            <a
+              :href="href"
+              :class="[
+                isActive
+                  ? 'bg-gray-550/[0.32] text-white'
+                  : 'hover:bg-gray-550/[0.16] text-gray-300 hover:text-gray-100',
+              ]"
+              class="group mx-2 flex items-center rounded px-2 py-1"
+            >
+              <Icon
+                class="mr-1.5 text-gray-400"
+                size="20px"
+                :name="channel.icon || 'mdi:hashtag'"
+              />
+              {{ channel.label }}
+              <Icon
+                class="ml-auto text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
+                size="16px"
+                name="material-symbols:person-add"
+              />
+            </a>
+          </NuxtLink>
         </div>
       </div>
     </div>

@@ -34,7 +34,7 @@ useHead({
       <NavLink
         v-for="channel in channels"
         :key="channel.id"
-        :to="`/channels/${channel.id}`"
+        :to="`/channels/${channel.id}/1`"
       >
         <img :src="`/servers/${channel.img}`" alt="" />
       </NavLink>

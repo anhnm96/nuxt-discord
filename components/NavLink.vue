@@ -1,9 +1,9 @@
 <template>
-  <NuxtLink v-slot="{ isActive }" class="group relative block">
+  <NuxtLink v-slot="{ route }" class="group relative block">
     <div class="absolute -left-3 flex h-full items-center">
       <div
         :class="[
-          isActive
+          route.params.sid === $route.params.sid
             ? 'h-10'
             : 'h-5 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100',
         ]"
@@ -14,7 +14,7 @@
     <div class="group-active:translate-y-px">
       <div
         :class="[
-          isActive
+          route.params.sid === $route.params.sid
             ? 'rounded-2xl bg-brand text-white'
             : 'rounded-3xl bg-gray-700 text-gray-100 group-hover:rounded-2xl group-hover:bg-brand group-hover:text-white',
         ]"
