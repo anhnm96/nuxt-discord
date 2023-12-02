@@ -22,7 +22,7 @@ useHead({
 
 <template>
   <div class="flex h-screen text-gray-100">
-    <div class="space-y-2 overflow-y-auto bg-gray-900 p-3">
+    <div class="hidden space-y-2 overflow-y-scroll bg-gray-900 p-3 md:block">
       <NavLink to="/">
         <Icon size="30px" name="ic:baseline-discord" />
       </NavLink>

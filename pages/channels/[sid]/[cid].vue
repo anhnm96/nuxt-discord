@@ -20,14 +20,14 @@ function toggleCategory(categoryId: string) {
 </script>
 
 <template>
-  <div class="flex w-60 flex-col bg-gray-800">
+  <div class="hidden w-60 flex-col bg-gray-800 md:flex">
     <button
       class="hover:bg-gray-550/[0.16] flex h-12 items-center px-4 font-title text-[15px] font-semibold text-white shadow-sm transition"
     >
       <div class="mr-2 flex items-center">
         <Icon size="16px" name="material-symbols:verified-rounded" />
       </div>
-      Tailwind CSS
+      {{ server.label }}
       <Icon class="ml-auto" size="18px" name="carbon:chevron-down" />
     </button>
     <!-- channel list -->
@@ -108,13 +108,25 @@ function toggleCategory(categoryId: string) {
       </div>
 
       <template v-if="selectedChannel.description">
-        <div class="mx-2 h-6 w-px bg-white/[.06]"></div>
-        <div class="mx-2 truncate text-sm font-medium text-gray-200">
+        <div class="bg-white/[.06 mx-2 hidden h-6 w-px md:block"></div>
+        <div
+          class="mx-2 hidden truncate text-sm font-medium text-gray-200 md:block"
+        >
           {{ selectedChannel.description }}
         </div>
       </template>
 
-      <div class="ml-auto flex items-center">
+      <!-- mobile buttons -->
+      <div className="flex items-center ml-auto md:hidden">
+        <button class="inline-flex text-gray-200 hover:text-gray-100">
+          <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
+        </button>
+        <button class="inline-flex text-gray-200 hover:text-gray-100">
+          <Icon class="mx-2" size="24px" name="mdi:people" />
+        </button>
+      </div>
+      <!-- desktop buttons -->
+      <div class="ml-auto hidden items-center md:flex">
         <button class="inline-flex text-gray-200 hover:text-gray-100">
           <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
         </button>
