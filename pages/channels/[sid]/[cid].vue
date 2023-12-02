@@ -1,79 +1,87 @@
 <script setup lang="ts">
 interface Server {
-  id: string | number
+  id: string
   label: string
   categories: Category[]
 }
 
 interface Category {
-  id: string | number
+  id: string
   label: string
   channels: Channel[]
 }
 
 interface Channel {
-  id: string | number
+  id: string
   label: string
   icon?: string
   unread?: boolean
 }
 const data: Record<string, Server> = {
   '1': {
-    id: 1,
+    id: '1',
     label: 'Tailwind CSS',
     categories: [
       {
-        id: 1,
+        id: '1',
         label: '',
         channels: [
-          { id: 1, label: 'welcome', icon: 'ic:baseline-library-books' },
+          { id: '1', label: 'welcome', icon: 'ic:baseline-library-books' },
           {
-            id: 2,
+            id: '2',
             label: 'announcements',
             icon: 'heroicons-solid:speakerphone',
           },
         ],
       },
       {
-        id: 2,
+        id: '2',
         label: 'Tailwind CSS',
         channels: [
-          { id: 3, label: 'general', unread: true },
-          { id: 4, label: 'plugins', unread: true },
-          { id: 5, label: 'help', unread: true },
-          { id: 6, label: 'internals' },
+          { id: '3', label: 'general', unread: true },
+          { id: '4', label: 'plugins', unread: true },
+          { id: '5', label: 'help', unread: true },
+          { id: '6', label: 'internals' },
         ],
       },
       {
-        id: 3,
+        id: '3',
         label: 'Tailwind Labs',
         channels: [
-          { id: 7, label: 'tailwind-ui' },
-          { id: 8, label: 'headless-ui' },
-          { id: 9, label: 'refactoring-ui', unread: true },
-          { id: 10, label: 'heroicons', unread: true },
+          { id: '7', label: 'tailwind-ui' },
+          { id: '8', label: 'headless-ui' },
+          { id: '9', label: 'refactoring-ui', unread: true },
+          { id: '10', label: 'heroicons', unread: true },
         ],
       },
       {
-        id: 4,
+        id: '4',
         label: 'Off topic',
         channels: [
-          { id: 11, label: 'design' },
-          { id: 12, label: 'development' },
-          { id: 13, label: 'random', unread: true },
+          { id: '11', label: 'design' },
+          { id: '12', label: 'development' },
+          { id: '13', label: 'random', unread: true },
         ],
       },
       {
-        id: 5,
+        id: '5',
         label: 'Community',
         channels: [
-          { id: 14, label: 'jobs' },
-          { id: 15, label: 'showcase', unread: true },
-          { id: 16, label: 'bots' },
+          { id: '14', label: 'jobs' },
+          { id: '15', label: 'showcase', unread: true },
+          { id: '16', label: 'bots' },
         ],
       },
     ],
   },
+}
+const closedCategories = reactive(new Set<string>([]))
+function toggleCategory(categoryId: string) {
+  if (closedCategories.has(categoryId)) {
+    closedCategories.delete(categoryId)
+  } else {
+    closedCategories.add(categoryId)
+  }
 }
 </script>
 
@@ -96,14 +104,24 @@ const data: Record<string, Server> = {
         <button
           v-if="category.label"
           class="flex w-full items-center px-0.5 font-title text-xs uppercase tracking-wide hover:text-gray-100"
+          @click="toggleCategory(category.id)"
         >
-          <Icon class="mr-0.5" size="12px" name="carbon:chevron-down" />
+          <Icon
+            :class="[closedCategories.has(category.id) && '-rotate-90']"
+            class="mr-0.5 transition duration-200"
+            size="12px"
+            name="carbon:chevron-down"
+          />
           {{ category.label }}
         </button>
 
         <div class="mt-[5px] space-y-0.5">
           <NuxtLink
-            v-for="channel in category.channels"
+            v-for="channel in category.channels.filter((c) => {
+              const categoryIsOpen = !closedCategories.has(category.id)
+
+              return categoryIsOpen || c.unread
+            })"
             :key="channel.id"
             v-slot="{ isActive, href }"
             :to="`/channels/${$route.params.sid}/${channel.id}`"

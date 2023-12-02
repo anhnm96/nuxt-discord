@@ -5,6 +5,7 @@ module.exports = {
     'no-console': 'warn',
     'antfu/if-newline': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
+    '@stylistic/ts/brace-style': 'off',
   },
   ignorePatterns: ['package.json', 'pnpm-lock.yaml'],
 }
