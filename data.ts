@@ -3,10 +3,11 @@ import type { Message, Server } from './types'
 
 faker.seed(123)
 
-export const data: Record<string, Server> = {
-  '1': {
+export const data: Server[] = [
+  {
     id: '1',
     label: 'Tailwind CSS',
+    img: 'tailwind.png',
     categories: [
       {
         id: '1',
@@ -149,9 +150,10 @@ export const data: Record<string, Server> = {
       },
     ],
   },
-  '2': {
+  {
     id: '2',
     label: 'Next.js',
+    img: 'next.png',
     categories: [
       {
         id: '6',
@@ -160,13 +162,13 @@ export const data: Record<string, Server> = {
           {
             id: '17',
             label: 'welcome',
-            icon: 'Book',
+            icon: 'ic:baseline-library-books',
             messages: getMessages(),
           },
           {
             id: '18',
             label: 'announcements',
-            icon: 'Speakerphone',
+            icon: 'heroicons-solid:speakerphone',
             description:
               'Announcements related to this Discord server and Next.js',
             messages: getMessages(),
@@ -201,7 +203,7 @@ export const data: Record<string, Server> = {
           {
             id: '21',
             label: 'general',
-            icon: 'HashtagWithSpeechBubble',
+            icon: 'solar:hashtag-chat-bold',
             description: 'Discussions about Next.js in general',
             messages: getMessages(),
           },
@@ -251,9 +253,10 @@ export const data: Record<string, Server> = {
       },
     ],
   },
-  '3': {
+  {
     id: '3',
     label: 'Mirage JS',
+    img: 'mirage.png',
     categories: [
       {
         id: '9',
@@ -271,7 +274,7 @@ export const data: Record<string, Server> = {
       },
     ],
   },
-}
+]
 
 function getMessages(): Message[] {
   return [...Array(faker.number.int({ min: 7, max: 25 }))]

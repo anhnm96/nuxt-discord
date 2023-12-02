@@ -1,6 +1,7 @@
 export interface Server {
   id: string
   label: string
+  img: string
   categories: Category[]
 }
 

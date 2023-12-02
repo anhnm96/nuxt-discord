@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { data } from '@/data'
-import type { Channel } from '@/types'
+import type { Channel, Server } from '@/types'
 
 const route = useRoute()
-const server = data[`${route.params.sid}`]
+const server = data.find((s) => s.id === route.params.sid) as Server
 const selectedChannel = server.categories
   .map((c) => c.channels)
   .flat()
@@ -34,7 +34,7 @@ function toggleCategory(categoryId: string) {
     <div
       class="flex-1 space-y-[21px] overflow-y-scroll pt-3 font-medium text-gray-300"
     >
-      <div v-for="category in data['1'].categories" :key="category.id">
+      <div v-for="category in server.categories" :key="category.id">
         <button
           v-if="category.label"
           class="flex w-full items-center px-0.5 font-title text-xs uppercase tracking-wide hover:text-gray-100"

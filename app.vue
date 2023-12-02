@@ -1,9 +1,5 @@
 <script setup lang="ts">
-const channels = [
-  { id: '1', img: 'tailwind.png' },
-  { id: '2', img: 'next.png' },
-  { id: '3', img: 'mirage.png' },
-]
+import { data } from '@/data'
 
 useHead({
   link: [
@@ -32,11 +28,11 @@ useHead({
       </NavLink>
       <hr class="mx-2 rounded border-t-2 border-t-white/[.06]" />
       <NavLink
-        v-for="channel in channels"
-        :key="channel.id"
-        :to="`/channels/${channel.id}/1`"
+        v-for="server in data"
+        :key="server.id"
+        :to="`/channels/${server.id}/${server.categories[0].channels[0].id}`"
       >
-        <img :src="`/servers/${channel.img}`" alt="" />
+        <img :src="`/servers/${server.img}`" alt="" />
       </NavLink>
     </div>
     <NuxtPage />
