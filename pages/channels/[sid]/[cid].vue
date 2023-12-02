@@ -102,7 +102,7 @@ function toggleCategory(categoryId: string) {
           size="24px"
           name="mdi:hashtag"
         />
-        <span class="mr-2 font-title text-white">{{
+        <span class="mr-2 whitespace-nowrap font-title text-white">{{
           selectedChannel.label
         }}</span>
       </div>
@@ -115,22 +115,32 @@ function toggleCategory(categoryId: string) {
       </template>
 
       <div class="ml-auto flex items-center">
-        <button class="text-gray-200 hover:text-gray-100">
+        <button class="inline-flex text-gray-200 hover:text-gray-100">
           <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
         </button>
-        <button class="text-gray-200 hover:text-gray-100">
+        <button class="inline-flex text-gray-200 hover:text-gray-100">
           <Icon class="mx-2" size="24px" name="mdi:bell" />
         </button>
-        <button class="text-gray-200 hover:text-gray-100">
+        <button class="inline-flex text-gray-200 hover:text-gray-100">
           <Icon class="mx-2" size="24px" name="tabler:pin-filled" />
         </button>
-        <button class="text-gray-200 hover:text-gray-100">
+        <button class="inline-flex text-gray-200 hover:text-gray-100">
           <Icon class="mx-2" size="24px" name="mdi:people" />
         </button>
-        <button class="text-gray-200 hover:text-gray-100">
+        <div class="relative mx-2">
+          <input
+            type="text"
+            placeholder="Search"
+            class="h-6 w-36 rounded border-none bg-gray-900 px-1.5 text-sm font-medium placeholder-gray-400"
+          />
+          <div class="absolute inset-y-0 right-0 flex items-center">
+            <Icon class="mr-1.5 text-gray-400" name="carbon:search" />
+          </div>
+        </div>
+        <button class="inline-flex text-gray-200 hover:text-gray-100">
           <Icon class="mx-2" size="24px" name="material-symbols:inbox" />
         </button>
-        <button class="text-gray-200 hover:text-gray-100">
+        <button class="inline-flex text-gray-200 hover:text-gray-100">
           <Icon
             class="mx-2"
             size="24px"
