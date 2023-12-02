@@ -5,9 +5,7 @@
     >
       Dashboard
     </div>
-    <div
-      class="flex-1 space-y-2 overflow-y-scroll p-3 font-medium text-gray-300"
-    >
+    <div class="flex-1 space-y-2 overflow-y-auto p-3 font-medium text-gray-300">
       <p class="text-white">Friends</p>
     </div>
   </div>

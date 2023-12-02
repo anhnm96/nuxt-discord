@@ -32,7 +32,7 @@ function toggleCategory(categoryId: string) {
     </button>
     <!-- channel list -->
     <div
-      class="flex-1 space-y-[21px] overflow-y-scroll pt-3 font-medium text-gray-300"
+      class="flex-1 space-y-[21px] overflow-y-auto pt-3 font-medium text-gray-300"
     >
       <div v-for="category in server.categories" :key="category.id">
         <button
@@ -149,7 +149,7 @@ function toggleCategory(categoryId: string) {
         </button>
       </div>
     </div>
-    <div class="flex-1 overflow-y-scroll">
+    <div class="flex-1 overflow-y-auto">
       <div v-for="(message, i) in selectedChannel.messages" :key="message.id">
         <div
           v-if="
