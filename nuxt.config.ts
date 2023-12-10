@@ -3,9 +3,10 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ['@nuxtjs/tailwindcss', 'nuxt-icon', 'radix-vue/nuxt'],
   runtimeConfig: {
-    clerkSecretKey: '',
-    public: {
-      publicClerkPublishableKey: '',
-    },
+    jwtSecret: '',
+    tokenAudience: '',
+    tokenIssuer: '',
+    accessTokenTtl: '',
+    refreshTokenTtl: '',
   },
 })

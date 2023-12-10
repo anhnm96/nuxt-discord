@@ -10,10 +10,11 @@ generator client {
 
 model Profile {
   id String @id @default(uuid())
-  userId String @unique
-  name String
-  imageUrl String @db.Text
-  email String @db.Text
+  userId String? @unique
+  name String?
+  imageUrl String? @db.Text
+  email String @unique
+  password String
 
   servers Server[]
   members Member[]
