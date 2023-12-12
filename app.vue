@@ -34,6 +34,7 @@ useHead({
       >
         <img :src="`/servers/${server.img}`" alt="" />
       </NavLink>
+      <CreateServerModal />
     </div>
     <NuxtPage />
   </div>

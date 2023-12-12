@@ -2,7 +2,11 @@ import jwt from 'jsonwebtoken'
 
 export default defineEventHandler((event) => {
   // protect all routes except /api/auth
-  if (event.node.req.url?.startsWith('/api/auth')) return
+  if (
+    !event.node.req.url?.startsWith('/api') ||
+    event.node.req.url?.startsWith('/api/auth')
+  )
+    return
 
   const config = useRuntimeConfig(event)
   const [_, token] = getHeader(event, 'authorization')?.split(' ') ?? []
