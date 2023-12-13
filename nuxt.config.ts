@@ -6,13 +6,15 @@ export default defineNuxtConfig({
     'nuxt-icon',
     'radix-vue/nuxt',
     '@vee-validate/nuxt',
+    '@pinia/nuxt',
+    '@vueuse/nuxt',
   ],
   runtimeConfig: {
     jwtSecret: '',
-    tokenAudience: '',
-    tokenIssuer: '',
-    accessTokenTtl: '',
-    refreshTokenTtl: '',
+    jwtTokenAudience: '',
+    jwtTokenIssuer: '',
+    jwtAccessTokenTtl: '',
+    jwtRefreshTokenTtl: '',
   },
   components: {
     dirs: [

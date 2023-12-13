@@ -8,16 +8,16 @@ import type { ActiveUserData } from '@/types'
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
 
-  async function generateTokens(user: Profile) {
+  function generateTokens(user: Profile) {
     const refreshTokenId = randomUUID()
     const accessToken = signToken<Partial<ActiveUserData>>(
       user.id,
-      config.accessTokenTtl,
+      +config.jwtAccessTokenTtl,
       {
         email: user.email,
       },
     )
-    const refreshToken = signToken(user.id, config.refreshTokenTtl, {
+    const refreshToken = signToken(user.id, +config.jwtRefreshTokenTtl, {
       refreshTokenId,
     })
     // await this.refreshTokenIdsStorage.insert(user.id, refreshTokenId)
@@ -25,9 +25,9 @@ export default defineEventHandler(async (event) => {
   }
 
   function signToken<T>(userId: string, expiresIn: number, payload?: T) {
-    return jwt.sign({ sub: userId, ...payload }, config.secret, {
-      audience: config.audience,
-      issuer: config.issuer,
+    return jwt.sign({ sub: userId, ...payload }, config.jwtSecret, {
+      audience: config.jwtTokenAudience,
+      issuer: config.jwtTokenIssuer,
       expiresIn,
     })
   }
@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
   const signInDto = await readBody(event)
   const user = await db.profile.findFirst({
     where: {
-      userId: signInDto.email,
+      email: signInDto.email,
     },
   })
 
