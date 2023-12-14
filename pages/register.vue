@@ -92,12 +92,9 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
             >
               Register
             </button>
-            <p>
+            <NuxtLink to="/login" class="text-blue-500 hover:underline">
               Already have an account?
-              <NuxtLink to="/signin" class="text-blue-500 hover:underline">
-                Sign In
-              </NuxtLink>
-            </p>
+            </NuxtLink>
           </Form>
         </div>
       </div>

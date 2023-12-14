@@ -44,5 +44,5 @@ export default defineEventHandler(async (event) => {
   const isEqual = await compare(signInDto.password, user.password)
   if (!isEqual) throw new Error('Password does not match')
 
-  return { ...generateTokens(user), ...user }
+  return { ...generateTokens(user), user }
 })

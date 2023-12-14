@@ -17,17 +17,11 @@ const loginSchema = toTypedSchema(
   }),
 )
 
+const { login } = useAuthStore()
+
 async function submit(values: any, { setErrors }: Record<string, any>) {
   try {
-    const { data } = await useAPI('/auth/sign-in', {
-      method: 'post',
-      body: values,
-    })
-    console.log('data', data)
-    // if (data) {
-    //   userStore.setUser(data)
-    //   router.push('/channels/me')
-    // }
+    await login(values)
   } catch (err: any) {
     if (err?.response?.status === 401) {
       setErrors({ password: 'Invalid credentials' })
