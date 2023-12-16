@@ -1,17 +1,18 @@
 import type { Profile } from '@prisma/client'
 
-interface LoginDto {
+interface LoginResponse {
   accessToken: string
   refreshToken: string
   user: Profile
+  expiresAt: number
 }
 
 export const useAuthStore = defineStore('auth-store', () => {
-  const user = useLocalStorage<Profile | null>('user', null)
-  const route = useRoute()
+  const user = ref<Profile | null>(null)
 
   async function login(payload: any) {
-    const { data, error } = await useAPI<LoginDto>('/auth/sign-in', {
+    const route = useRoute()
+    const { data, error } = await useAPI<LoginResponse>('/auth/sign-in', {
       method: 'post',
       body: payload,
     })
@@ -19,14 +20,16 @@ export const useAuthStore = defineStore('auth-store', () => {
     if (error.value) throw new Error(error.value.statusMessage)
 
     if (data.value) {
-      localStorage.setItem('token', data.value.accessToken)
+      localStorage.setItem('user', JSON.stringify(data.value.user))
+      localStorage.setItem('expiresAt', data.value.expiresAt.toString())
       user.value = data.value.user
       const redirectTo = (route.query.redirectTo as string) || '/'
       navigateTo(redirectTo, { replace: true })
     }
   }
 
-  function logout() {
+  async function logout() {
+    await useAPI('/auth/sign-out', { method: 'POST' })
     user.value = null
     localStorage.clear()
     navigateTo('/')

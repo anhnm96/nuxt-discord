@@ -9,12 +9,12 @@ export default defineEventHandler((event) => {
     return
 
   const config = useRuntimeConfig(event)
-  const [_, token] = getHeader(event, 'authorization')?.split(' ') ?? []
+  const token = getCookie(event, 'accessToken')
   if (!token)
     throw createError({ statusMessage: 'Unauthenticated', statusCode: 401 })
 
   try {
-    const payload = jwt.verify(token, config.secret)
+    const payload = jwt.verify(token, config.jwtSecret)
     event.context.auth = payload
   } catch (err: any) {
     if (err.name === 'TokenExpiredError') {

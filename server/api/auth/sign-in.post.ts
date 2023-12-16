@@ -44,5 +44,14 @@ export default defineEventHandler(async (event) => {
   const isEqual = await compare(signInDto.password, user.password)
   if (!isEqual) throw new Error('Password does not match')
 
-  return { ...generateTokens(user), user }
+  const tokens = generateTokens(user)
+  const expiresAt = Date.now() + Number(config.jwtAccessTokenTtl) * 1000
+  setCookie(event, 'accessToken', tokens.accessToken, {
+    maxAge: +config.jwtAccessTokenTtl,
+    expires: new Date(expiresAt),
+    httpOnly: true,
+    sameSite: 'lax',
+  })
+
+  return { ...tokens, user, expiresAt }
 })
