@@ -2,6 +2,10 @@
 import { data } from '@/data'
 import type { Channel, Server } from '@/types'
 
+definePageMeta({
+  middleware: ['auth'],
+})
+
 const route = useRoute()
 const server = data.find((s) => s.id === route.params.sid) as Server
 const selectedChannel = server.categories
@@ -22,7 +26,7 @@ function toggleCategory(categoryId: string) {
 <template>
   <div class="hidden w-60 flex-col bg-gray-800 md:flex">
     <button
-      class="hover:bg-gray-550/[0.16] flex h-12 items-center px-4 font-title text-[15px] font-semibold text-white shadow-sm transition"
+      class="flex h-12 items-center px-4 font-title text-[15px] font-semibold text-white shadow-sm transition hover:bg-gray-550/[0.16]"
     >
       <div class="mr-2 flex items-center">
         <Icon size="16px" name="material-symbols:verified-rounded" />
@@ -67,8 +71,8 @@ function toggleCategory(categoryId: string) {
                 isActive
                   ? 'bg-gray-550/[0.32] text-white'
                   : channel.unread
-                    ? 'hover:bg-gray-550/[0.16] active:bg-gray-550/[0.24] text-white'
-                    : 'hover:bg-gray-550/[0.16] active:bg-gray-550/[0.24] text-gray-300 hover:text-gray-100',
+                    ? 'text-white hover:bg-gray-550/[0.16] active:bg-gray-550/[0.24]'
+                    : 'text-gray-300 hover:bg-gray-550/[0.16] hover:text-gray-100 active:bg-gray-550/[0.24]',
               ]"
               class="group relative mx-2 flex items-center rounded px-2 py-1"
             >

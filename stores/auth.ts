@@ -7,7 +7,8 @@ interface LoginDto {
 }
 
 export const useAuthStore = defineStore('auth-store', () => {
-  const user = ref<Profile | null>(null)
+  const user = useLocalStorage<Profile | null>('user', null)
+  const route = useRoute()
 
   async function login(payload: any) {
     const { data, error } = await useAPI<LoginDto>('/auth/sign-in', {
@@ -20,7 +21,8 @@ export const useAuthStore = defineStore('auth-store', () => {
     if (data.value) {
       localStorage.setItem('token', data.value.accessToken)
       user.value = data.value.user
-      navigateTo('/')
+      const redirectTo = (route.query.redirectTo as string) || '/'
+      navigateTo(redirectTo, { replace: true })
     }
   }
 
