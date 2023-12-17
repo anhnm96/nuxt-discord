@@ -121,7 +121,7 @@ function toggleCategory(categoryId: string) {
       </template>
 
       <!-- mobile buttons -->
-      <div className="flex items-center ml-auto md:hidden">
+      <div class="ml-auto flex items-center md:hidden">
         <button class="inline-flex text-gray-200 hover:text-gray-100">
           <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
         </button>

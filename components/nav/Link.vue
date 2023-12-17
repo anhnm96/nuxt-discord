@@ -18,7 +18,7 @@
             ? 'rounded-2xl bg-brand text-white'
             : 'rounded-3xl bg-gray-700 text-gray-100 group-hover:rounded-2xl group-hover:bg-brand group-hover:text-white',
         ]"
-        class="flex h-12 w-12 items-center justify-center overflow-hidden transition-all duration-200"
+        class="flex h-12 w-12 items-center justify-center overflow-hidden text-lg font-medium transition-all duration-200"
       >
         <slot />
       </div>

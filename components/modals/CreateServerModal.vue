@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import * as z from 'zod'
+import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
+import type { Server } from '@prisma/client'
 
+const open = ref(false)
+const { user } = storeToRefs(useAuthStore())
 const createServerSchema = toTypedSchema(
   z.object({
     name: z.string().min(1, {
       message: 'Server name is required.',
     }),
-    imageUrl: z.string().min(1, {
-      message: 'Server image is required.',
-    }),
+    // imageUrl: z.string().min(1, {
+    //   message: 'Server image is required.',
+    // }),
   }),
 )
 
@@ -17,6 +20,10 @@ const showModal = ref('select')
 const transition = ref('slide-left')
 async function createServer(values: any, { setErrors }: any) {
   try {
+    const { data } = await useAPI<Server>('/servers', {
+      method: 'POST',
+      body: values,
+    })
     // const { data } = await createGuild(values)
     // if (data) {
     //   cache.setQueryData(gKey, (guilds: any) => {
@@ -25,6 +32,8 @@ async function createServer(values: any, { setErrors }: any) {
     //   emit('update:modelValue', false)
     //   router.push(`/channels/${data.id}/${data.default_channel_id}`)
     // }
+    open.value = false
+    console.log('createServer', data)
   } catch (err: any) {
     // setErrors(toErrorMap(err))
   }
@@ -32,7 +41,7 @@ async function createServer(values: any, { setErrors }: any) {
 </script>
 
 <template>
-  <DialogRoot>
+  <DialogRoot v-model:open="open">
     <DialogTrigger
       class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-700 text-green-500 transition ease-out hover:rounded-2xl hover:bg-green-600 hover:text-white"
     >
@@ -41,7 +50,7 @@ async function createServer(values: any, { setErrors }: any) {
     <DialogPortal>
       <DialogOverlay class="fixed inset-0 bg-black/80" />
       <DialogContent
-        class="fixed inset-0 z-50 flex h-full w-full items-center justify-center"
+        class="fixed left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
       >
         <div
           class="relative mx-auto w-screen max-w-md overflow-hidden rounded bg-gray-700"
@@ -77,7 +86,7 @@ async function createServer(values: any, { setErrors }: any) {
                   v-focus
                   name="name"
                   type="text"
-                  value="User's server"
+                  :value="`${user?.name}'s server`"
                   class="hover:border-input-hover border-input rounded border bg-gray-900 p-2"
                 />
                 <ErrorMessage class="text-red-400" name="name" />
@@ -103,13 +112,13 @@ async function createServer(values: any, { setErrors }: any) {
                 >
                   Back
                 </button>
-                <b-button
-                  :loading="isSubmitting"
+                <BaseButton
                   type="submit"
                   class="rounded bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500/90"
+                  :loading="isSubmitting"
                 >
                   Create
-                </b-button>
+                </BaseButton>
               </div>
             </section>
           </Form>
