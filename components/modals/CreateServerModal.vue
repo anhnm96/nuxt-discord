@@ -20,20 +20,12 @@ const showModal = ref('select')
 const transition = ref('slide-left')
 async function createServer(values: any, { setErrors }: any) {
   try {
-    const { data } = await useAPI<Server>('/servers', {
+    await useAPI<Server>('/servers', {
       method: 'POST',
       body: values,
     })
-    // const { data } = await createGuild(values)
-    // if (data) {
-    //   cache.setQueryData(gKey, (guilds: any) => {
-    //     return [...guilds, data]
-    //   })
-    //   emit('update:modelValue', false)
-    //   router.push(`/channels/${data.id}/${data.default_channel_id}`)
-    // }
+    refreshNuxtData('servers')
     open.value = false
-    console.log('createServer', data)
   } catch (err: any) {
     // setErrors(toErrorMap(err))
   }

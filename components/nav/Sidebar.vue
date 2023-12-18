@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { Server } from '@prisma/client'
 
-const { data: servers } = useAPI<Server[]>('/servers')
+const { data: servers } = useAPI<Server[]>('/servers', { key: 'servers' })
 
 function getServerName(name: string) {
   const nameArr = name.split(' ').slice(0, 2)
 
-  return nameArr[0][0] + nameArr[1]?.[0]
+  return nameArr[0][0] + (nameArr[1] ? nameArr[1]?.[0] : '')
 }
 </script>
 
