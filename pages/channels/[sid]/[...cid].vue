@@ -1,17 +1,34 @@
 <script setup lang="ts">
-import { data } from '@/data'
-import type { Channel, Server } from '@/types'
+import { ChannelType } from '@prisma/client'
+import type { Category, Channel, Member, Server } from '@prisma/client'
 
 definePageMeta({
   middleware: ['auth'],
 })
 
 const route = useRoute()
-const server = data.find((s) => s.id === route.params.sid) as Server
-const selectedChannel = server.categories
-  .map((c) => c.channels)
-  .flat()
-  .find((channel) => channel.id === route.params.cid) as Channel
+const { data: server, status } = useAPI<
+  Server & {
+    categories: (Category & { channels: Channel[] })[]
+    members: Member[]
+  }
+>(`/servers/${route.params.sid}`)
+if (!server.value)
+  throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
+
+// const textChannels = server.value?.channels.filter(
+//   (channel) => channel.type === ChannelType.TEXT,
+// )
+// const audioChannels = server.value?.channels.filter(
+//   (channel) => channel.type === ChannelType.AUDIO,
+// )
+// const videoChannels = server.value?.channels.filter(
+//   (channel) => channel.type === ChannelType.VIDEO,
+// )
+// const members = server.value?.members.filter(
+//   (member) => member.profileId !== profile.id,
+// )
+const selectedChannel = server.value.categories[0].channels[0]
 
 const closedCategories = reactive(new Set<string>([]))
 function toggleCategory(categoryId: string) {
@@ -31,70 +48,72 @@ function toggleCategory(categoryId: string) {
       <div class="mr-2 flex items-center">
         <Icon size="16px" name="material-symbols:verified-rounded" />
       </div>
-      {{ server.label }}
+      {{ server?.name }}
       <Icon class="ml-auto" size="18px" name="carbon:chevron-down" />
     </button>
     <!-- channel list -->
     <div
       class="flex-1 space-y-[21px] overflow-y-auto pt-3 font-medium text-gray-300"
     >
-      <div v-for="category in server.categories" :key="category.id">
-        <button
-          v-if="category.label"
-          class="flex w-full items-center px-0.5 font-title text-xs uppercase tracking-wide hover:text-gray-100"
-          @click="toggleCategory(category.id)"
-        >
-          <Icon
-            :class="[closedCategories.has(category.id) && '-rotate-90']"
-            class="mr-0.5 transition duration-200"
-            size="12px"
-            name="carbon:chevron-down"
-          />
-          {{ category.label }}
-        </button>
-
-        <div class="mt-[5px] space-y-0.5">
-          <NuxtLink
-            v-for="channel in category.channels.filter((c) => {
-              const categoryIsOpen = !closedCategories.has(category.id)
-
-              return categoryIsOpen || c.unread
-            })"
-            :key="channel.id"
-            v-slot="{ isActive, href }"
-            :to="`/channels/${$route.params.sid}/${channel.id}`"
-            custom
+      <template v-if="server">
+        <div v-for="category in server.categories" :key="category.id">
+          <button
+            v-if="category.label"
+            class="flex w-full items-center px-0.5 font-title text-xs uppercase tracking-wide hover:text-gray-100"
+            @click="toggleCategory(category.id)"
           >
-            <a
-              :href="href"
-              :class="[
-                isActive
-                  ? 'bg-gray-550/[0.32] text-white'
-                  : channel.unread
-                    ? 'text-white hover:bg-gray-550/[0.16] active:bg-gray-550/[0.24]'
-                    : 'text-gray-300 hover:bg-gray-550/[0.16] hover:text-gray-100 active:bg-gray-550/[0.24]',
-              ]"
-              class="group relative mx-2 flex items-center rounded px-2 py-1"
+            <Icon
+              :class="[closedCategories.has(category.id) && '-rotate-90']"
+              class="mr-0.5 transition duration-200"
+              size="12px"
+              name="carbon:chevron-down"
+            />
+            {{ category.label }}
+          </button>
+
+          <div class="mt-[5px] space-y-0.5">
+            <NuxtLink
+              v-for="channel in category.channels.filter((c) => {
+                const categoryIsOpen = !closedCategories.has(category.id)
+
+                return categoryIsOpen || c.unread
+              })"
+              :key="channel.id"
+              v-slot="{ isActive, href }"
+              :to="`/channels/${$route.params.sid}/${channel.id}`"
+              custom
             >
-              <div
-                v-if="!isActive && channel.unread"
-                class="absolute left-0 -ml-2 h-2 w-1 rounded-r-full bg-white"
-              ></div>
-              <Icon
-                class="mr-1.5 text-gray-400"
-                size="20px"
-                :name="channel.icon || 'mdi:hashtag'"
-              />
-              {{ channel.label }}
-              <Icon
-                class="ml-auto text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
-                size="16px"
-                name="material-symbols:person-add"
-              />
-            </a>
-          </NuxtLink>
+              <a
+                :href="href"
+                :class="[
+                  isActive
+                    ? 'bg-gray-550/[0.32] text-white'
+                    : channel.unread
+                      ? 'text-white hover:bg-gray-550/[0.16] active:bg-gray-550/[0.24]'
+                      : 'text-gray-300 hover:bg-gray-550/[0.16] hover:text-gray-100 active:bg-gray-550/[0.24]',
+                ]"
+                class="group relative mx-2 flex items-center rounded px-2 py-1"
+              >
+                <div
+                  v-if="!isActive && channel.unread"
+                  class="absolute left-0 -ml-2 h-2 w-1 rounded-r-full bg-white"
+                ></div>
+                <Icon
+                  class="mr-1.5 text-gray-400"
+                  size="20px"
+                  :name="channel.icon || 'mdi:hashtag'"
+                />
+                {{ channel.label }}
+                <Icon
+                  class="ml-auto text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
+                  size="16px"
+                  name="material-symbols:person-add"
+                />
+              </a>
+            </NuxtLink>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 
@@ -107,7 +126,7 @@ function toggleCategory(categoryId: string) {
           name="mdi:hashtag"
         />
         <span class="mr-2 whitespace-nowrap font-title text-white">{{
-          selectedChannel.label
+          selectedChannel.name
         }}</span>
       </div>
 
