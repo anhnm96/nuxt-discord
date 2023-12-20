@@ -18,6 +18,8 @@ export default {
       },
       colors: {
         brand: '#5865f2',
+        'brand-560': '#4752C4',
+        'brand-600': '#3C45A5',
         gray: {
           50: '#ECEDEE',
           100: '#DCDDDE',

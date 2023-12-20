@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { ChannelType } from '@prisma/client'
+import { ChannelType, MemberRole } from '@prisma/client'
 import type { Category, Channel, Member, Server } from '@prisma/client'
 
 definePageMeta({
   middleware: ['auth'],
 })
 
+interface ServerWithDetails extends Server {
+  categories: (Category & { channels: Channel[] })[]
+  members: Member[]
+}
+
 const route = useRoute()
-const { data: server, status } = useAPI<
-  Server & {
-    categories: (Category & { channels: Channel[] })[]
-    members: Member[]
-  }
->(`/servers/${route.params.sid}`)
+const { data: server, status } = await useAPI<ServerWithDetails>(
+  `/servers/${route.params.sid}`,
+)
 if (!server.value)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
 
@@ -38,19 +40,85 @@ function toggleCategory(categoryId: string) {
     closedCategories.add(categoryId)
   }
 }
+
+const { user } = storeToRefs(useAuthStore())
+const role = server.value.members.find(
+  (member) => member.profileId === user.value!.id,
+)?.role
+const isAdmin = role === MemberRole.ADMIN
+const isModerator = isAdmin || role === MemberRole.MODERATOR
+
+const dropdownMenu = [
+  {
+    show: isModerator,
+    component: 'DropdownMenuItem',
+    label: 'Invite People',
+    icon: 'material-symbols:person-add',
+  },
+  {
+    show: isAdmin,
+    component: 'DropdownMenuItem',
+    label: 'Server Settings',
+    icon: 'lucide:settings',
+  },
+  {
+    show: isAdmin,
+    component: 'DropdownMenuItem',
+    label: 'Manage Members',
+    icon: 'lucide:users',
+  },
+  {
+    show: isModerator,
+    component: 'DropdownMenuItem',
+    label: 'Create Channel',
+    icon: 'lucide:plus-circle',
+  },
+  {
+    show: isAdmin,
+    component: 'DropdownMenuItem',
+    label: 'Delete Server',
+    icon: 'lucide:trash',
+  },
+  {
+    show: !isAdmin,
+    component: 'DropdownMenuItem',
+    label: 'Leave Settings',
+    icon: 'lucide:log-out',
+  },
+]
 </script>
 
 <template>
   <div class="hidden w-60 flex-col bg-gray-800 md:flex">
-    <button
-      class="flex h-12 items-center px-4 font-title text-[15px] font-semibold text-white shadow-sm transition hover:bg-gray-550/[0.16]"
-    >
-      <div class="mr-2 flex items-center">
-        <Icon size="16px" name="material-symbols:verified-rounded" />
-      </div>
-      {{ server?.name }}
-      <Icon class="ml-auto" size="18px" name="carbon:chevron-down" />
-    </button>
+    <DropdownMenuRoot>
+      <DropdownMenuTrigger
+        class="flex h-12 items-center px-4 font-title text-[15px] font-semibold text-white shadow-sm transition hover:bg-gray-550/[0.16]"
+      >
+        <div class="mr-2 flex items-center">
+          <Icon size="16px" name="material-symbols:verified-rounded" />
+        </div>
+        {{ server?.name }}
+        <Icon class="ml-auto" size="18px" name="carbon:chevron-down" />
+      </DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          class="min-w-[220px] rounded bg-black px-2 py-1.5 text-gray-100"
+        >
+          <template v-for="(menu, index) in dropdownMenu" :key="menu.label">
+            <DropdownMenuSeparator
+              v-if="index === 4 && isModerator"
+              class="my-1 h-px bg-gray-800"
+            />
+            <DropdownMenuItem
+              class="hover:bg-brand-560 flex items-center justify-between rounded-sm px-2 py-1.5 hover:text-white"
+            >
+              <span>{{ menu.label }}</span>
+              <Icon :name="menu.icon" />
+            </DropdownMenuItem>
+          </template>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenuRoot>
     <!-- channel list -->
     <div
       class="flex-1 space-y-[21px] overflow-y-auto pt-3 font-medium text-gray-300"
@@ -58,7 +126,7 @@ function toggleCategory(categoryId: string) {
       <template v-if="server">
         <div v-for="category in server.categories" :key="category.id">
           <button
-            v-if="category.label"
+            v-if="category.name"
             class="flex w-full items-center px-0.5 font-title text-xs uppercase tracking-wide hover:text-gray-100"
             @click="toggleCategory(category.id)"
           >
@@ -68,7 +136,7 @@ function toggleCategory(categoryId: string) {
               size="12px"
               name="carbon:chevron-down"
             />
-            {{ category.label }}
+            {{ category.name }}
           </button>
 
           <div class="mt-[5px] space-y-0.5">

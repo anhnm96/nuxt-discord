@@ -16,8 +16,15 @@ export default defineEventHandler(async (event) => {
       name,
       imageUrl,
       inviteCode: nanoid(),
-      channels: {
-        create: [{ name: 'general', profileId: event.context.auth.sub }],
+      categories: {
+        create: [
+          {
+            name: 'text channels',
+            channels: {
+              create: [{ name: 'general', profileId: event.context.auth.sub }],
+            },
+          },
+        ],
       },
       members: {
         create: [{ profileId: event.context.auth.sub, role: MemberRole.ADMIN }],
