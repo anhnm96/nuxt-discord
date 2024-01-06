@@ -14,6 +14,7 @@ interface ServerWithDetails extends Server {
 const route = useRoute()
 const { data: server, status } = await useAPI<ServerWithDetails>(
   `/servers/${route.params.sid}`,
+  { key: `server-${route.params.sid}` },
 )
 if (!server.value)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
@@ -51,37 +52,37 @@ const isModerator = isAdmin || role === MemberRole.MODERATOR
 const dropdownMenu = [
   {
     show: isModerator,
-    component: 'DropdownMenuItem',
+    component: resolveComponent('InviteModal'),
     label: 'Invite People',
     icon: 'material-symbols:person-add',
   },
   {
     show: isAdmin,
-    component: 'DropdownMenuItem',
+    component: '',
     label: 'Server Settings',
     icon: 'lucide:settings',
   },
   {
     show: isAdmin,
-    component: 'DropdownMenuItem',
+    component: '',
     label: 'Manage Members',
     icon: 'lucide:users',
   },
   {
     show: isModerator,
-    component: 'DropdownMenuItem',
+    component: '',
     label: 'Create Channel',
     icon: 'lucide:plus-circle',
   },
   {
     show: isAdmin,
-    component: 'DropdownMenuItem',
+    component: '',
     label: 'Delete Server',
     icon: 'lucide:trash',
   },
   {
     show: !isAdmin,
-    component: 'DropdownMenuItem',
+    component: '',
     label: 'Leave Settings',
     icon: 'lucide:log-out',
   },
@@ -109,8 +110,19 @@ const dropdownMenu = [
               v-if="index === 4 && isModerator"
               class="my-1 h-px bg-gray-800"
             />
+            <ClientOnly v-if="menu.component">
+              <DropdownMenuItem :as="menu.component">
+                <div
+                  class="flex items-center justify-between rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
+                >
+                  <span>{{ menu.label }}</span>
+                  <Icon :name="menu.icon" />
+                </div>
+              </DropdownMenuItem>
+            </ClientOnly>
             <DropdownMenuItem
-              class="hover:bg-brand-560 flex items-center justify-between rounded-sm px-2 py-1.5 hover:text-white"
+              v-else
+              class="flex items-center justify-between rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
             >
               <span>{{ menu.label }}</span>
               <Icon :name="menu.icon" />

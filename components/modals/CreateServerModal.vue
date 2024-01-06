@@ -42,7 +42,7 @@ async function createServer(values: any, { setErrors }: any) {
     <DialogPortal>
       <DialogOverlay class="fixed inset-0 bg-black/80" />
       <DialogContent
-        class="fixed left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+        class="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2"
       >
         <div
           class="relative mx-auto w-screen max-w-md overflow-hidden rounded bg-gray-700"
@@ -54,7 +54,7 @@ async function createServer(values: any, { setErrors }: any) {
             @submit="createServer"
           >
             <DialogClose
-              class="hover:text-hover absolute right-3 top-3 grid h-8 w-8 place-items-center text-gray-100 transition-colors"
+              class="absolute right-3 top-3 grid h-8 w-8 place-items-center text-gray-300 transition-colors hover:text-gray-200"
               aria-label="close"
             >
               <Icon name="lucide:x" size="20px" />

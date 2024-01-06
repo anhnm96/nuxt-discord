@@ -2,6 +2,14 @@
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
+## Prisma
+- Reset database: `npx prisma migrate reset`
+- Everytime we modified our schemas in prisma, we have to run 2 commands:
+```bash
+npx prisma generate
+npx prisma db push
+```
+
 ## Setup
 
 Make sure to install the dependencies:
