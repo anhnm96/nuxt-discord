@@ -7,14 +7,6 @@ export function useAPI<T>(
   return useFetch(url, {
     ...options,
     headers: useRequestHeaders(['cookie']),
-    $fetch: $fetch.create({
-      baseURL: '/api',
-      // @ts-expect-error
-      onResponseError({ response }) {
-        if (response.status === 401) {
-          return navigateTo('/login')
-        }
-      },
-    }),
+    $fetch: useNuxtApp().$api,
   })
 }
