@@ -58,7 +58,7 @@ const dropdownMenu = [
   },
   {
     show: isAdmin,
-    component: '',
+    component: resolveComponent('ServerSettingsModal'),
     label: 'Server Settings',
     icon: 'lucide:settings',
   },
@@ -110,23 +110,25 @@ const dropdownMenu = [
               v-if="index === 4 && isModerator"
               class="my-1 h-px bg-gray-800"
             />
-            <ClientOnly v-if="menu.component">
-              <DropdownMenuItem :as="menu.component">
-                <div
-                  class="flex items-center justify-between rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
-                >
-                  <span>{{ menu.label }}</span>
-                  <Icon :name="menu.icon" />
-                </div>
+            <template v-if="menu.show">
+              <ClientOnly v-if="menu.component">
+                <DropdownMenuItem :as="menu.component">
+                  <div
+                    class="flex cursor-pointer items-center justify-between rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
+                  >
+                    <span>{{ menu.label }}</span>
+                    <Icon :name="menu.icon" />
+                  </div>
+                </DropdownMenuItem>
+              </ClientOnly>
+              <DropdownMenuItem
+                v-else
+                class="flex cursor-pointer items-center justify-between rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
+              >
+                <span>{{ menu.label }}</span>
+                <Icon :name="menu.icon" />
               </DropdownMenuItem>
-            </ClientOnly>
-            <DropdownMenuItem
-              v-else
-              class="flex items-center justify-between rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
-            >
-              <span>{{ menu.label }}</span>
-              <Icon :name="menu.icon" />
-            </DropdownMenuItem>
+            </template>
           </template>
         </DropdownMenuContent>
       </DropdownMenuPortal>
