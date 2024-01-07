@@ -64,7 +64,7 @@ const dropdownMenu = [
   },
   {
     show: isAdmin,
-    component: '',
+    component: resolveComponent('MembersModal'),
     label: 'Manage Members',
     icon: 'lucide:users',
   },
