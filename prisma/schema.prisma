@@ -11,7 +11,7 @@ datasource db {
 model Profile {
   id        String    @id @default(uuid())
   userId    String?   @unique
-  name      String?
+  username  String?
   imageUrl  String?   @db.Text
   email     String    @unique
   password  String
@@ -38,13 +38,13 @@ model Server {
 }
 
 model Category {
-  id       String    @id @default(uuid())
-  name     String
-  channels Channel[]
-  serverId String
-  server   Server    @relation(fields: [serverId], references: [id], onDelete: Cascade)
-  createdAt              DateTime        @default(now())
-  updatedAt              DateTime        @updatedAt
+  id        String    @id @default(uuid())
+  name      String
+  channels  Channel[]
+  serverId  String
+  server    Server    @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([serverId])
 }
@@ -68,16 +68,17 @@ model Member {
 }
 
 model Channel {
-  id         String      @id @default(uuid())
-  name       String
-  type       ChannelType @default(TEXT)
-  profileId  String
-  categoryId String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  profile    Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  category   Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  messages   Message[]
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  type        ChannelType @default(TEXT)
+  profileId   String
+  categoryId  String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  profile     Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  messages    Message[]
 
   @@index([profileId])
   @@index([categoryId])

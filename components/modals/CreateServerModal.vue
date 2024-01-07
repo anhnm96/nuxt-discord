@@ -1,20 +1,9 @@
 <script setup lang="ts">
-import { z } from 'zod'
-import { toTypedSchema } from '@vee-validate/zod'
 import type { Server } from '@prisma/client'
+import { ServerSchema } from '@/validations/server'
 
 const open = ref(false)
 const { user } = storeToRefs(useAuthStore())
-const createServerSchema = toTypedSchema(
-  z.object({
-    name: z.string().min(1, {
-      message: 'Server name is required.',
-    }),
-    // imageUrl: z.string().min(1, {
-    //   message: 'Server image is required.',
-    // }),
-  }),
-)
 
 const showModal = ref('select')
 const transition = ref('slide-left')
@@ -50,7 +39,7 @@ async function createServer(values: any, { setErrors }: any) {
           <Form
             v-slot="{ isSubmitting }"
             class="pt-6"
-            :validation-schema="createServerSchema"
+            :validation-schema="ServerSchema"
             @submit="createServer"
           >
             <DialogClose
@@ -78,7 +67,7 @@ async function createServer(values: any, { setErrors }: any) {
                   v-focus
                   name="name"
                   type="text"
-                  :value="`${user?.name}'s server`"
+                  :value="`${user?.username}'s server`"
                   class="hover:border-input-hover border-input rounded border bg-gray-900 p-2"
                 />
                 <ErrorMessage class="text-red-400" name="name" />
