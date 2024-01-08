@@ -31,5 +31,6 @@ useHead({
   <div class="flex h-screen text-gray-100">
     <NavSidebar />
     <NuxtPage />
+    <Dialog />
   </div>
 </template>

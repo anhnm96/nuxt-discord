@@ -42,6 +42,7 @@ function toggleCategory(categoryId: string) {
   }
 }
 
+const { $api } = useNuxtApp()
 const { user } = storeToRefs(useAuthStore())
 const role = server.value.members.find(
   (member) => member.profileId === user.value!.id,
@@ -49,6 +50,32 @@ const role = server.value.members.find(
 const isAdmin = role === MemberRole.ADMIN
 const isModerator = isAdmin || role === MemberRole.MODERATOR
 
+const { open } = useDialog()
+async function deleteServer() {
+  const answer = await open({
+    title: `Delete server "${server.value?.name}"`,
+    content: `Are you sure you want to delete "${server.value?.name}"? This action cannot be undone.`,
+    okText: 'Delete Server',
+  })
+  if (answer === 'confirm') {
+    await $api(`servers/${server.value?.id}`, { method: 'DELETE' })
+    refreshNuxtData('servers')
+    navigateTo('/')
+  }
+}
+
+async function leaveServer() {
+  const answer = await open({
+    title: `Leave "${server.value?.name}"`,
+    content: `Are you sure you want to leave "${server.value?.name}"? You won't be able to re-join this server unless you are re-invited.`,
+    okText: 'Leave Server',
+  })
+  if (answer === 'confirm') {
+    await $api(`servers/${server.value?.id}/leave`, { method: 'PATCH' })
+    refreshNuxtData('servers')
+    navigateTo('/')
+  }
+}
 const dropdownMenu = [
   {
     show: isModerator,
@@ -79,12 +106,14 @@ const dropdownMenu = [
     component: '',
     label: 'Delete Server',
     icon: 'lucide:trash',
+    click: () => deleteServer(),
   },
   {
     show: !isAdmin,
     component: '',
     label: 'Leave Settings',
     icon: 'lucide:log-out',
+    click: () => leaveServer(),
   },
 ]
 </script>
@@ -124,6 +153,7 @@ const dropdownMenu = [
               <DropdownMenuItem
                 v-else
                 class="flex cursor-pointer items-center justify-between rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
+                @click="menu.click"
               >
                 <span>{{ menu.label }}</span>
                 <Icon :name="menu.icon" />
