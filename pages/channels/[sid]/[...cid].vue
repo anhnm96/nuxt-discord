@@ -70,7 +70,7 @@ const dropdownMenu = [
   },
   {
     show: isModerator,
-    component: '',
+    component: resolveComponent('CreateChannelModal'),
     label: 'Create Channel',
     icon: 'lucide:plus-circle',
   },

@@ -39,7 +39,7 @@ model Server {
 
 model Category {
   id        String    @id @default(uuid())
-  name      String
+  name      String?
   channels  Channel[]
   serverId  String
   server    Server    @relation(fields: [serverId], references: [id], onDelete: Cascade)
