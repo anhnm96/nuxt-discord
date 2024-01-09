@@ -72,6 +72,7 @@ model Channel {
   name        String
   description String?
   type        ChannelType @default(TEXT)
+  unread      Boolean     @default(false)
   profileId   String
   categoryId  String
   createdAt   DateTime    @default(now())

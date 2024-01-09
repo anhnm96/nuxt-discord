@@ -116,6 +116,12 @@ const dropdownMenu = [
     click: () => leaveServer(),
   },
 ]
+
+const iconMap = {
+  [ChannelType.TEXT]: 'lucide:hash',
+  [ChannelType.AUDIO]: 'lucide:mic',
+  [ChannelType.VIDEO]: 'lucide:video',
+}
 </script>
 
 <template>
@@ -165,25 +171,33 @@ const dropdownMenu = [
     </DropdownMenuRoot>
     <!-- channel list -->
     <div
-      class="flex-1 space-y-[21px] overflow-y-auto pt-3 font-medium text-gray-300"
+      class="flex-1 space-y-4 overflow-y-auto pt-3 font-medium text-gray-300"
     >
       <template v-if="server">
         <div v-for="category in server.categories" :key="category.id">
-          <button
+          <div
             v-if="category.name"
-            class="flex w-full items-center px-0.5 font-title text-xs uppercase tracking-wide hover:text-gray-100"
-            @click="toggleCategory(category.id)"
+            class="flex items-center justify-between pr-2"
           >
-            <Icon
-              :class="[closedCategories.has(category.id) && '-rotate-90']"
-              class="mr-0.5 transition duration-200"
-              size="12px"
-              name="carbon:chevron-down"
-            />
-            {{ category.name }}
-          </button>
+            <button
+              v-if="category.name"
+              class="flex w-full items-center px-0.5 font-title text-xs uppercase tracking-wide hover:text-gray-100"
+              @click="toggleCategory(category.id)"
+            >
+              <Icon
+                :class="[closedCategories.has(category.id) && '-rotate-90']"
+                class="mr-0.5 transition duration-200"
+                size="12px"
+                name="carbon:chevron-down"
+              />
+              {{ category.name }}
+            </button>
+            <button class="hover:text-gray-100" aria-label="Create Channel">
+              <Icon size="18px" name="lucide:plus" />
+            </button>
+          </div>
 
-          <div class="mt-[5px] space-y-0.5">
+          <div class="mt-1 space-y-0.5">
             <NuxtLink
               v-for="channel in category.channels.filter((c) => {
                 const categoryIsOpen = !closedCategories.has(category.id)
@@ -213,9 +227,9 @@ const dropdownMenu = [
                 <Icon
                   class="mr-1.5 text-gray-400"
                   size="20px"
-                  :name="channel.icon || 'mdi:hashtag'"
+                  :name="iconMap[channel.type]"
                 />
-                {{ channel.label }}
+                {{ channel.name }}
                 <Icon
                   class="ml-auto text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
                   size="16px"
