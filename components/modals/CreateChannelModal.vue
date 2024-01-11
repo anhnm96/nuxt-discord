@@ -17,7 +17,7 @@ const ChannelSchema = toTypedSchema(
   }),
 )
 
-const open = ref(false)
+const modalStore = useModalStore()
 const { $api } = useNuxtApp()
 const route = useRoute()
 async function handleCreateChannel(values: any, { setErrors }: any) {
@@ -26,7 +26,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
       method: 'POST',
       body: { categoryName: null, ...values },
     })
-    open.value = false
+    modalStore.close()
   } catch (err: any) {
     console.error(err)
     // setErrors(toErrorMap(err))
@@ -35,10 +35,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
 </script>
 
 <template>
-  <DialogRoot v-model:open="open">
-    <DialogTrigger as-child>
-      <slot />
-    </DialogTrigger>
+  <DialogRoot v-model:open="modalStore.isOpen">
     <DialogPortal>
       <DialogOverlay class="fixed inset-0 bg-black/80" />
       <DialogContent
@@ -190,7 +187,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
                 <button
                   type="button"
                   class="rounded bg-transparent px-4 py-2 text-white hover:underline"
-                  @click="open = false"
+                  @click="modalStore.close()"
                 >
                   Cancel
                 </button>

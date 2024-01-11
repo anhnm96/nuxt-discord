@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ChannelType, MemberRole } from '@prisma/client'
 import type { Category, Channel, Member, Server } from '@prisma/client'
+import { useModalStore } from '~/stores/modal'
 
 definePageMeta({
   middleware: ['auth'],
@@ -76,6 +77,7 @@ async function leaveServer() {
     navigateTo('/')
   }
 }
+const modalStore = useModalStore()
 const dropdownMenu = [
   {
     show: isModerator,
@@ -97,9 +99,9 @@ const dropdownMenu = [
   },
   {
     show: isModerator,
-    component: resolveComponent('CreateChannelModal'),
     label: 'Create Channel',
     icon: 'lucide:plus-circle',
+    click: () => modalStore.open('createChannel'),
   },
   {
     show: isAdmin,
@@ -192,7 +194,11 @@ const iconMap = {
               />
               {{ category.name }}
             </button>
-            <button class="hover:text-gray-100" aria-label="Create Channel">
+            <button
+              class="hover:text-gray-100"
+              aria-label="Create Channel"
+              @click="modalStore.open('createChannel')"
+            >
               <Icon size="18px" name="lucide:plus" />
             </button>
           </div>
