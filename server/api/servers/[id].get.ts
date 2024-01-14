@@ -12,7 +12,11 @@ export default defineEventHandler(async (event) => {
           name: 'asc',
         },
         include: {
-          channels: true,
+          channels: {
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
         },
       },
       members: {

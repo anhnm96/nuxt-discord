@@ -32,7 +32,7 @@ if (!server.value)
 // const members = server.value?.members.filter(
 //   (member) => member.profileId !== profile.id,
 // )
-const selectedChannel = server.value.categories[0].channels[0]
+const selectedChannel = server.value.categories[1].channels[0]
 
 const closedCategories = reactive(new Set<string>([]))
 function toggleCategory(categoryId: string) {
@@ -101,7 +101,10 @@ const dropdownMenu = [
     show: isModerator,
     label: 'Create Channel',
     icon: 'lucide:plus-circle',
-    click: () => modalStore.open('createChannel'),
+    click: () =>
+      modalStore.open('createChannel', {
+        categoryId: server.value!.categories[0].id,
+      }),
   },
   {
     show: isAdmin,
@@ -182,7 +185,6 @@ const iconMap = {
             class="flex items-center justify-between pr-2"
           >
             <button
-              v-if="category.name"
               class="flex w-full items-center px-0.5 font-title text-xs uppercase tracking-wide hover:text-gray-100"
               @click="toggleCategory(category.id)"
             >
@@ -197,7 +199,12 @@ const iconMap = {
             <button
               class="hover:text-gray-100"
               aria-label="Create Channel"
-              @click="modalStore.open('createChannel')"
+              @click="
+                modalStore.open('createChannel', {
+                  categoryId: category.id,
+                  categoryName: category.name,
+                })
+              "
             >
               <Icon size="18px" name="lucide:plus" />
             </button>

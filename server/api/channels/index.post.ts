@@ -3,7 +3,7 @@ import db from '@/lib/prisma'
 
 export default defineEventHandler(async (event) => {
   const { serverId } = getQuery<{ serverId: string }>(event)
-  const { categoryName, name, type } = await readBody(event)
+  const { categoryId, name, type } = await readBody(event)
 
   if (!serverId)
     return createError({ statusMessage: 'Server ID missing', status: 400 })
@@ -14,26 +14,24 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
     })
 
-  const server = await db.server.update({
+  const server = await db.category.update({
     where: {
-      id: serverId,
-      members: {
-        some: {
-          profileId: event.context.auth.sub,
-          role: {
-            in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+      id: categoryId,
+      server: {
+        id: serverId,
+        members: {
+          some: {
+            profileId: event.context.auth.sub,
+            role: {
+              in: [MemberRole.ADMIN, MemberRole.MODERATOR],
+            },
           },
         },
       },
     },
     data: {
-      categories: {
-        create: {
-          name: categoryName,
-          channels: {
-            create: [{ name, profileId: event.context.auth.sub, type }],
-          },
-        },
+      channels: {
+        create: [{ name, profileId: event.context.auth.sub, type }],
       },
     },
   })

@@ -24,8 +24,9 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
   try {
     await $api(`/channels?serverId=${route.params.sid}`, {
       method: 'POST',
-      body: { categoryName: null, ...values },
+      body: { categoryId: modalStore.data.categoryId, ...values },
     })
+    refreshNuxtData(`server-${route.params.sid}`)
     modalStore.close()
   } catch (err: any) {
     console.error(err)
@@ -42,13 +43,17 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
         class="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2"
       >
         <div
-          class="relative mx-auto w-screen max-w-md space-y-4 overflow-hidden rounded-md bg-gray-700 text-gray-300"
+          class="relative mx-auto w-screen max-w-md overflow-hidden rounded-md bg-gray-700 text-gray-300"
         >
           <header class="p-4">
             <DialogTitle class="text-xl font-medium text-gray-100"
               >Create Channel</DialogTitle
             >
-            <span class="text-xs">In {{}}</span>
+            <span
+              v-if="modalStore.data.categoryName"
+              class="text-xs text-gray-100"
+              >In {{ modalStore.data.categoryName }}</span
+            >
             <DialogClose
               class="absolute right-4 top-4 grid h-8 w-8 place-items-center text-gray-300 transition-colors hover:text-gray-200"
               aria-label="close"
@@ -161,6 +166,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
                     class="w-full rounded border border-gray-900 bg-gray-900 py-2 pl-8 pr-2 outline-none"
                     type="text"
                     placeholder="new-channel"
+                    autocomplete="off"
                   />
                 </div>
                 <ErrorMessage class="text-red-400" name="name" />
