@@ -7,8 +7,9 @@ definePageMeta({
   middleware: ['auth'],
 })
 
+type CategoryWithChannels = Category & { channels: Channel[] }
 interface ServerWithDetails extends Server {
-  categories: (Category & { channels: Channel[] })[]
+  categories: CategoryWithChannels[]
   members: Member[]
 }
 
@@ -77,6 +78,34 @@ async function leaveServer() {
     navigateTo('/')
   }
 }
+
+async function deleteChannel(category: CategoryWithChannels, channel: Channel) {
+  const answer = await open({
+    title: `Delete Channel`,
+    content: `Are you sure you want to delete "#${server.value?.name}"? This cannot be undone.`,
+    okText: 'Delete Channel',
+  })
+  if (answer === 'confirm') {
+    await $api(
+      `/channels/${channel.id}?serverId=${server.value?.id}&categoryId=${category.id}`,
+      { method: 'DELETE' },
+    )
+    refreshNuxtData(`server-${server.value?.id}`)
+    if (route.params.cid[0] === channel.id) {
+      if (category.channels.length > 1) {
+        const c = category.channels.find((c) => c.id !== channel.id)
+        if (c)
+          navigateTo(`/channels/${server.value?.id}/${c.id}`, { replace: true })
+      } else {
+        navigateTo(
+          `/channels/${server.value?.id}/${server.value?.categories[1].channels[0].id}`,
+          { replace: true },
+        )
+      }
+    }
+  }
+}
+
 const modalStore = useModalStore()
 const dropdownMenu = [
   {
@@ -103,7 +132,7 @@ const dropdownMenu = [
     icon: 'lucide:plus-circle',
     click: () =>
       modalStore.open('createChannel', {
-        categoryId: server.value!.categories[0].id,
+        category: server.value!.categories[0],
       }),
   },
   {
@@ -258,6 +287,7 @@ const iconMap = {
                   <button
                     aria-label="Delete Channel"
                     class="text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
+                    @click.prevent="deleteChannel(category, channel)"
                   >
                     <Icon size="16px" name="lucide:trash" />
                   </button>

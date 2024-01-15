@@ -43,15 +43,25 @@ const route = useRoute()
 async function handleCreateChannel(values: any, { setErrors }: any) {
   try {
     if (modalStore.type === 'createChannel') {
-      await $api(`/channels?serverId=${route.params.sid}&categoryId=${modalStore.data.category!.id}`, {
-        method: 'POST',
-        body: values,
-      })
+      await $api(
+        `/channels?serverId=${route.params.sid}&categoryId=${
+          modalStore.data.category!.id
+        }`,
+        {
+          method: 'POST',
+          body: values,
+        },
+      )
     } else {
-      await $api(`/channels/${modalStore.data.channel!.id}?serverId=${route.params.sid}&categoryId=${modalStore.data.category!.id}`, {
-        method: 'PATCH',
-        body: values,
-      })
+      await $api(
+        `/channels/${modalStore.data.channel!.id}?serverId=${
+          route.params.sid
+        }&categoryId=${modalStore.data.category!.id}`,
+        {
+          method: 'PATCH',
+          body: values,
+        },
+      )
     }
     refreshNuxtData(`server-${route.params.sid}`)
     modalStore.close()

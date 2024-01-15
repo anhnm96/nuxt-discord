@@ -6,16 +6,16 @@ export default defineEventHandler(async (event) => {
     serverId: string
     categoryId: string
   }>(event)
-  const { name, type } = await readBody(event)
 
   if (!serverId)
     return createError({ statusMessage: 'Server ID missing', status: 400 })
 
-  if (name === 'general')
-    return createError({
-      statusMessage: 'Name cannot be "general"',
-      statusCode: 400,
-    })
+  if (!categoryId)
+    return createError({ statusMessage: 'Category ID missing', status: 400 })
+
+  const channelId = getRouterParam(event, 'id')
+  if (!channelId)
+    return createError({ statusMessage: 'Channel ID missing', status: 400 })
 
   const server = await db.category.update({
     where: {
@@ -34,7 +34,12 @@ export default defineEventHandler(async (event) => {
     },
     data: {
       channels: {
-        create: [{ name, profileId: event.context.auth.sub, type }],
+        delete: {
+          id: channelId,
+          name: {
+            not: 'general',
+          },
+        },
       },
     },
   })
