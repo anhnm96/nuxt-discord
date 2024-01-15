@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Channel } from '@prisma/client'
 import { ChannelType } from '@prisma/client'
 import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -18,14 +19,40 @@ const ChannelSchema = toTypedSchema(
 )
 
 const modalStore = useModalStore()
+
+const isOpen = computed(
+  () =>
+    modalStore.isOpen &&
+    ['createChannel', 'editChannel'].includes(modalStore.type!),
+)
+
+const initialValues: Pick<Channel, 'name' | 'type'> = {
+  name: '',
+  type: ChannelType.TEXT,
+}
+
+watchEffect(() => {
+  if (modalStore.isOpen && modalStore.type === 'editChannel') {
+    initialValues.name = modalStore.data.channel?.name || ''
+    initialValues.type = modalStore.data.channel?.type || ChannelType.TEXT
+  }
+})
+
 const { $api } = useNuxtApp()
 const route = useRoute()
 async function handleCreateChannel(values: any, { setErrors }: any) {
   try {
-    await $api(`/channels?serverId=${route.params.sid}`, {
-      method: 'POST',
-      body: { categoryId: modalStore.data.categoryId, ...values },
-    })
+    if (modalStore.type === 'createChannel') {
+      await $api(`/channels?serverId=${route.params.sid}&categoryId=${modalStore.data.category!.id}`, {
+        method: 'POST',
+        body: values,
+      })
+    } else {
+      await $api(`/channels/${modalStore.data.channel!.id}?serverId=${route.params.sid}&categoryId=${modalStore.data.category!.id}`, {
+        method: 'PATCH',
+        body: values,
+      })
+    }
     refreshNuxtData(`server-${route.params.sid}`)
     modalStore.close()
   } catch (err: any) {
@@ -36,7 +63,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
 </script>
 
 <template>
-  <DialogRoot v-model:open="modalStore.isOpen">
+  <DialogRoot :open="isOpen" @update:open="modalStore.close()">
     <DialogPortal>
       <DialogOverlay class="fixed inset-0 bg-black/80" />
       <DialogContent
@@ -50,9 +77,9 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
               >Create Channel</DialogTitle
             >
             <span
-              v-if="modalStore.data.categoryName"
+              v-if="modalStore.data.category?.name"
               class="text-xs text-gray-100"
-              >In {{ modalStore.data.categoryName }}</span
+              >In {{ modalStore.data.category.name }}</span
             >
             <DialogClose
               class="absolute right-4 top-4 grid h-8 w-8 place-items-center text-gray-300 transition-colors hover:text-gray-200"
@@ -64,7 +91,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
           <Form
             v-slot="{ isSubmitting, values }"
             :validation-schema="ChannelSchema"
-            :initial-values="{ type: ChannelType.TEXT }"
+            :initial-values="initialValues"
             @submit="handleCreateChannel"
           >
             <main class="space-y-5 px-4 pb-5">
@@ -78,6 +105,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
                     name="type"
                     class="hidden"
                     :value="ChannelType.TEXT"
+                    :disabled="modalStore.type === 'editChannel'"
                   />
                   <label
                     class="flex cursor-pointer items-center rounded bg-gray-600/80 p-3"
@@ -116,6 +144,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
                     name="type"
                     class="hidden"
                     :value="ChannelType.AUDIO"
+                    :disabled="modalStore.type === 'editChannel'"
                   />
                   <label
                     class="flex cursor-pointer items-center rounded p-3"

@@ -1,29 +1,27 @@
-import type { Channel, ChannelType, Server } from '@prisma/client'
+import type { Category, Channel, Server } from '@prisma/client'
 
-export type ModalType = 'createChannel'
+export type ModalType = 'createChannel' | 'editChannel'
 
 interface ModalData {
   server?: Server
-  categoryId?: string
-  categoryName?: string
+  category?: Category
   channel?: Channel
-  channelType?: ChannelType
   apiUrl?: string
   query?: Record<string, any>
 }
 
 export const useModalStore = defineStore('modal-store', () => {
-  let type: ModalType | null = null
+  const type = ref<ModalType | null>(null)
   const data = ref<ModalData>({})
   const isOpen = ref(false)
   function open(_type: ModalType, _data: ModalData = {}) {
     isOpen.value = true
-    type = _type
+    type.value = _type
     data.value = _data
   }
 
   function close() {
-    type = null
+    type.value = null
     isOpen.value = false
     data.value = {}
   }

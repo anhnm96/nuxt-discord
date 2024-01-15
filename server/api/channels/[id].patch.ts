@@ -2,16 +2,27 @@ import { MemberRole } from '@prisma/client'
 import db from '@/lib/prisma'
 
 export default defineEventHandler(async (event) => {
-  const { serverId, categoryId } = getQuery<{ serverId: string, categoryId: string }>(event)
-  const { name, type } = await readBody(event)
+  const { serverId, categoryId } = getQuery<{
+    serverId: string
+    categoryId: string
+  }>(event)
 
   if (!serverId)
     return createError({ statusMessage: 'Server ID missing', status: 400 })
 
+  if (!categoryId)
+    return createError({ statusMessage: 'Category ID missing', status: 400 })
+
+  const channelId = getRouterParam(event, 'id')
+  if (!channelId)
+    return createError({ statusMessage: 'Channel ID missing', status: 400 })
+
+  const { name } = await readBody(event)
+
   if (name === 'general')
     return createError({
       statusMessage: 'Name cannot be "general"',
-      statusCode: 400,
+      status: 400,
     })
 
   const server = await db.category.update({
@@ -31,7 +42,17 @@ export default defineEventHandler(async (event) => {
     },
     data: {
       channels: {
-        create: [{ name, profileId: event.context.auth.sub, type }],
+        update: {
+          where: {
+            id: channelId,
+            NOT: {
+              name: 'general',
+            },
+          },
+          data: {
+            name,
+          },
+        },
       },
     },
   })

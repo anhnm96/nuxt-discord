@@ -201,8 +201,7 @@ const iconMap = {
               aria-label="Create Channel"
               @click="
                 modalStore.open('createChannel', {
-                  categoryId: category.id,
-                  categoryName: category.name,
+                  category,
                 })
               "
             >
@@ -243,11 +242,26 @@ const iconMap = {
                   :name="iconMap[channel.type]"
                 />
                 {{ channel.name }}
-                <Icon
-                  class="ml-auto text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
-                  size="16px"
-                  name="material-symbols:person-add"
-                />
+                <div class="ml-auto space-x-1">
+                  <button
+                    aria-label="Edit Channel"
+                    class="text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
+                    @click.prevent="
+                      modalStore.open('editChannel', {
+                        category,
+                        channel,
+                      })
+                    "
+                  >
+                    <Icon size="16px" name="lucide:edit" />
+                  </button>
+                  <button
+                    aria-label="Delete Channel"
+                    class="text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
+                  >
+                    <Icon size="16px" name="lucide:trash" />
+                  </button>
+                </div>
               </a>
             </NuxtLink>
           </div>
