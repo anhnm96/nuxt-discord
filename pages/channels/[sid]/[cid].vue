@@ -1,26 +1,20 @@
 <script setup lang="ts">
 import { ChannelType, MemberRole } from '@prisma/client'
-import type { Category, Channel, Member, Server } from '@prisma/client'
+import type { Channel } from '@prisma/client'
+import type { CategoryWithChannels, ServerWithDetails } from '@/types'
 import { useModalStore } from '~/stores/modal'
 
 definePageMeta({
   middleware: ['auth'],
 })
 
-type CategoryWithChannels = Category & { channels: Channel[] }
-interface ServerWithDetails extends Server {
-  categories: CategoryWithChannels[]
-  members: Member[]
-}
-
 const route = useRoute()
-const { data: server, status } = await useAPI<ServerWithDetails>(
-  `/servers/${route.params.sid}`,
-  { key: `server-${route.params.sid}` },
+const { data: server } = useNuxtData<ServerWithDetails>(
+  `server-${route.params.sid}`,
 )
+
 if (!server.value)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
-
 // const textChannels = server.value?.channels.filter(
 //   (channel) => channel.type === ChannelType.TEXT,
 // )
@@ -268,7 +262,7 @@ const iconMap = {
                 <Icon
                   class="mr-1.5 text-gray-400"
                   size="20px"
-                  :name="iconMap[channel.type]"
+                  :name="iconMap[channel.type as keyof typeof iconMap]"
                 />
                 {{ channel.name }}
                 <div class="ml-auto space-x-1">

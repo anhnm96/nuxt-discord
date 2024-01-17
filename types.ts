@@ -1,32 +1,4 @@
-export interface Server {
-  id: string
-  label: string
-  img: string
-  categories: Category[]
-}
-
-export interface Category {
-  id: string
-  label: string
-  channels: Channel[]
-}
-
-export interface Channel {
-  id: string
-  label: string
-  icon?: string
-  unread?: boolean
-  description?: string
-  messages: Message[]
-}
-
-export interface Message {
-  id: string
-  user: string
-  avatarUrl: string
-  date: string
-  text: string
-}
+import type { Category, Channel, Member, Server } from '@prisma/client'
 
 export interface ActiveUserData {
   /**
@@ -40,4 +12,10 @@ export interface ActiveUserData {
    * The subject's (user) email
    */
   email: string
+}
+
+export type CategoryWithChannels = Category & { channels: Channel[] }
+export interface ServerWithDetails extends Server {
+  categories: CategoryWithChannels[]
+  members: Member[]
 }
