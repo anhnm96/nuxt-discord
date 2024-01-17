@@ -35,6 +35,9 @@ watchEffect(() => {
   if (modalStore.isOpen && modalStore.type === 'editChannel') {
     initialValues.name = modalStore.data.channel?.name || ''
     initialValues.type = modalStore.data.channel?.type || ChannelType.TEXT
+  } else {
+    initialValues.name = ''
+    initialValues.type = ChannelType.TEXT
   }
 })
 
@@ -73,7 +76,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
 </script>
 
 <template>
-  <DialogRoot :open="isOpen" @update:open="modalStore.close()">
+  <DialogRoot v-if="isOpen" default-open @update:open="modalStore.close()">
     <DialogPortal>
       <DialogOverlay class="fixed inset-0 bg-black/80" />
       <DialogContent

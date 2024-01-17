@@ -82,7 +82,7 @@ async function leaveServer() {
 async function deleteChannel(category: CategoryWithChannels, channel: Channel) {
   const answer = await open({
     title: `Delete Channel`,
-    content: `Are you sure you want to delete "#${server.value?.name}"? This cannot be undone.`,
+    content: `Are you sure you want to delete "#${channel.name}"? This cannot be undone.`,
     okText: 'Delete Channel',
   })
   if (answer === 'confirm') {
