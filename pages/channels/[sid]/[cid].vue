@@ -9,8 +9,10 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { data: server } = useNuxtData<ServerWithDetails>(
-  `server-${route.params.sid}`,
+
+const { data: server, status } = await useAPI<ServerWithDetails>(
+  `/servers/${route.params.sid}`,
+  { key: `server-${route.params.sid}` },
 )
 
 if (!server.value)
@@ -308,7 +310,7 @@ const iconMap = {
       </div>
 
       <template v-if="selectedChannel.description">
-        <div class="bg-white/[.06 mx-2 hidden h-6 w-px md:block"></div>
+        <div class="mx-2 hidden h-6 w-px bg-white/[.06] md:block"></div>
         <div
           class="mx-2 hidden truncate text-sm font-medium text-gray-200 md:block"
         >
@@ -327,6 +329,7 @@ const iconMap = {
       </div>
       <!-- desktop buttons -->
       <div class="ml-auto hidden items-center md:flex">
+        <SocketIndicator />
         <button class="inline-flex text-gray-200 hover:text-gray-100">
           <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
         </button>

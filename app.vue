@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { io as ClientIO } from 'socket.io-client'
+
 const authStore = useAuthStore()
 if (process.client) {
   const user = localStorage.getItem('user')
@@ -7,6 +9,27 @@ if (process.client) {
     authStore.user = JSON.parse(user)
   }
 }
+
+// setup socket
+const isConnected = ref(false)
+const socket = ClientIO(useRuntimeConfig().public.apiBase as string, {
+  path: '/api/socket/io2',
+  addTrailingSlash: false,
+})
+
+socket.on('connect', () => {
+  isConnected.value = true
+})
+
+socket.on('disconnect', () => {
+  isConnected.value = false
+})
+
+onBeforeUnmount(() => {
+  socket.disconnect()
+})
+
+provide(socketKey, { socket, isConnected })
 
 useHead({
   link: [

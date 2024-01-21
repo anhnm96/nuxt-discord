@@ -41,6 +41,8 @@
     "nanoid": "^5.0.4",
     "pinia": "^2.1.7",
     "radix-vue": "^1.2.3",
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4",
     "vee-validate": "^4.12.2",
     "zod": "^3.22.4"
   }
