@@ -13,7 +13,7 @@ if (process.client) {
 // setup socket
 const isConnected = ref(false)
 const socket = ClientIO(useRuntimeConfig().public.apiBase as string, {
-  path: '/api/socket/io2',
+  path: '/api/socket/io',
   addTrailingSlash: false,
 })
 
