@@ -364,37 +364,42 @@ const iconMap = {
         </button>
       </div>
     </div>
-    <div class="flex-1 overflow-y-auto">
-      <div v-for="(message, i) in selectedChannel.messages" :key="message.id">
-        <div
-          v-if="
-            i === 0 || message.user !== selectedChannel.messages[i - 1].user
-          "
-          class="mt-[17px] flex py-0.5 pl-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]"
-        >
-          <img
-            class="mr-4 mt-0.5 h-10 w-10 rounded-full"
-            :src="message.avatarUrl"
-            alt=""
-          />
-          <div>
-            <p class="flex items-baseline">
-              <span class="mr-2 font-medium text-green-400">
-                {{ message.user }}
-              </span>
-              <span class="text-xs font-medium text-gray-400">
-                {{ message.date }}
-              </span>
-            </p>
-            <p class="text-gray-100">{{ message.text }}</p>
+    <div class="flex flex-1 flex-col">
+      <div class="flex-1 overflow-y-auto">
+        <div v-for="(message, i) in selectedChannel.messages" :key="message.id">
+          <div
+            v-if="
+              i === 0 || message.user !== selectedChannel.messages[i - 1].user
+            "
+            class="mt-[17px] flex py-0.5 pl-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]"
+          >
+            <img
+              class="mr-4 mt-0.5 h-10 w-10 rounded-full"
+              :src="message.avatarUrl"
+              alt=""
+            />
+            <div>
+              <p class="flex items-baseline">
+                <span class="mr-2 font-medium text-green-400">
+                  {{ message.user }}
+                </span>
+                <span class="text-xs font-medium text-gray-400">
+                  {{ message.date }}
+                </span>
+              </p>
+              <p class="text-gray-100">{{ message.text }}</p>
+            </div>
+          </div>
+          <div
+            v-else
+            class="py-0.5 pl-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]"
+          >
+            <p class="pl-14 text-gray-100">{{ message.text }}</p>
           </div>
         </div>
-        <div
-          v-else
-          class="py-0.5 pl-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]"
-        >
-          <p class="pl-14 text-gray-100">{{ message.text }}</p>
-        </div>
+      </div>
+      <div class="relative mt-auto flex-shrink-0 px-4 pb-6">
+        <ChatInput />
       </div>
     </div>
   </div>

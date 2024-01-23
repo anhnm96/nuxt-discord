@@ -34,6 +34,9 @@ export default {
           900: '#202225',
         },
       },
+      backgroundColor: {
+        textarea: '#464950',
+      },
     },
   },
   plugins: [require('@tailwindcss/forms')],

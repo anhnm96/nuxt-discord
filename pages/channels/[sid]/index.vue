@@ -18,3 +18,7 @@ navigateTo(
   { replace: true },
 )
 </script>
+
+<template>
+  <slot />
+</template>
