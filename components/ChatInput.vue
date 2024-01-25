@@ -6,6 +6,7 @@ const { socket } = useSocket()
 const userStore = useAuthStore()
 const channelStore = useChannelStore()
 const isTyping = ref(false)
+const inputEl = ref<HTMLDivElement | null>(null)
 // const channel: any = serverId
 // ? useGetCurrentChannel(serverId, channelId)
 // : useGetCurrentDM(channelId)
@@ -40,6 +41,23 @@ function handleOnInput(e: any) {
       socket.emit('stopTyping', channelId, userStore.user?.username)
     }, 2000)
   }
+}
+
+function handleAddEmoji(emoji: string) {
+  const lastNode =
+    inputEl.value!.childNodes[inputEl.value!.childNodes.length - 1]
+  // @ts-expect-error
+  if (lastNode.outerHTML === '<br>') {
+    inputEl.value!.childNodes[
+      inputEl.value!.childNodes.length - 2
+    ].textContent += emoji
+  } else {
+    inputEl.value!.textContent += emoji
+  }
+  // focus and move caret to the end
+  const lastLine = inputEl.value!.innerHTML.replace(/.*?(<br>)/g, '')
+  const selection = window.getSelection()
+  selection?.collapse(lastNode, lastLine.length)
 }
 
 function handleSendMessage(e: KeyboardEvent) {
@@ -90,7 +108,7 @@ const typingString = computed(() => {
   <p v-show="typingString" class="absolute -top-4 left-4 text-xs italic">
     {{ typingString }}...
   </p>
-  <div class="bg-textarea flex rounded-lg">
+  <div class="flex rounded-lg bg-textarea">
     <button class="self-start px-4 py-2 text-gray-400 hover:text-gray-300">
       <Icon size="24px" name="lucide:plus-circle" />
     </button>
@@ -103,11 +121,15 @@ const typingString = computed(() => {
         {{ placeholder }}
       </div>
       <div
+        ref="inputEl"
         contenteditable="true"
         class="rounded py-2.5 pr-4 caret-gray-300 outline-none"
         @input="handleOnInput"
         @keydown.enter.exact.prevent="handleSendMessage"
       ></div>
+      <div class="absolute right-0 top-0 py-2.5 pr-4">
+        <EmojiPicker @select="handleAddEmoji" />
+      </div>
     </div>
   </div>
 </template>
