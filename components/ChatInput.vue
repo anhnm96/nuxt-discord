@@ -44,20 +44,31 @@ function handleOnInput(e: any) {
 }
 
 function handleAddEmoji(emoji: string) {
-  const lastNode =
-    inputEl.value!.childNodes[inputEl.value!.childNodes.length - 1]
-  // @ts-expect-error
-  if (lastNode.outerHTML === '<br>') {
-    inputEl.value!.childNodes[
-      inputEl.value!.childNodes.length - 2
-    ].textContent += emoji
+  const lastNode = inputEl.value?.lastChild
+
+  if (lastNode && lastNode.nodeName === 'BR') {
+    const secondLastNode = lastNode.previousSibling
+    if (secondLastNode && secondLastNode.nodeName === 'BR') {
+      ;(secondLastNode as HTMLBRElement).insertAdjacentText('afterend', emoji)
+      setSelectionToEnd(lastNode.previousSibling)
+    } else if (secondLastNode) {
+      secondLastNode.textContent += emoji
+      setSelectionToEnd(lastNode.previousSibling)
+    } else {
+      ;(lastNode as HTMLBRElement).insertAdjacentText('beforebegin', emoji)
+      setSelectionToEnd(inputEl.value?.lastChild as ChildNode)
+    }
   } else {
     inputEl.value!.textContent += emoji
+    setSelectionToEnd(inputEl.value!.lastChild!)
   }
-  // focus and move caret to the end
-  const lastLine = inputEl.value!.innerHTML.replace(/.*?(<br>)/g, '')
+}
+
+function setSelectionToEnd(targetNode: ChildNode) {
   const selection = window.getSelection()
-  selection?.collapse(lastNode, lastLine.length)
+  if (selection) {
+    selection.collapse(targetNode, targetNode.textContent?.length)
+  }
 }
 
 function handleSendMessage(e: KeyboardEvent) {

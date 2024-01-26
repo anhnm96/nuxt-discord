@@ -28,7 +28,7 @@ function select(emoji: any) {
       :side-offset="-40"
       class="mb-16 border-none bg-transparent shadow-none drop-shadow-none"
     >
-      <Picker theme="{resolvedTheme}" :data="emojiIndex" @select="select" />
+      <Picker :data="emojiIndex" @select="select" />
     </PopoverContent>
   </PopoverRoot>
 </template>
