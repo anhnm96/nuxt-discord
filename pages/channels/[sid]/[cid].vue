@@ -297,110 +297,80 @@ const iconMap = {
   </div>
 
   <div class="flex min-w-0 flex-1 flex-shrink flex-col bg-gray-700">
-    <div class="flex h-12 items-center px-2 shadow-sm">
-      <div class="flex items-center">
-        <Icon
-          class="mx-2 font-semibold text-gray-400"
-          size="24px"
-          name="mdi:hashtag"
-        />
-        <span class="mr-2 whitespace-nowrap font-title text-white">{{
-          selectedChannel.name
-        }}</span>
-      </div>
-
-      <template v-if="selectedChannel.description">
-        <div class="mx-2 hidden h-6 w-px bg-white/[.06] md:block"></div>
-        <div
-          class="mx-2 hidden truncate text-sm font-medium text-gray-200 md:block"
-        >
-          {{ selectedChannel.description }}
-        </div>
-      </template>
-
-      <!-- mobile buttons -->
-      <div class="ml-auto flex items-center md:hidden">
-        <button class="inline-flex text-gray-200 hover:text-gray-100">
-          <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
-        </button>
-        <button class="inline-flex text-gray-200 hover:text-gray-100">
-          <Icon class="mx-2" size="24px" name="mdi:people" />
-        </button>
-      </div>
-      <!-- desktop buttons -->
-      <div class="ml-auto hidden items-center md:flex">
-        <SocketIndicator />
-        <button class="inline-flex text-gray-200 hover:text-gray-100">
-          <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
-        </button>
-        <button class="inline-flex text-gray-200 hover:text-gray-100">
-          <Icon class="mx-2" size="24px" name="mdi:bell" />
-        </button>
-        <button class="inline-flex text-gray-200 hover:text-gray-100">
-          <Icon class="mx-2" size="24px" name="tabler:pin-filled" />
-        </button>
-        <button class="inline-flex text-gray-200 hover:text-gray-100">
-          <Icon class="mx-2" size="24px" name="mdi:people" />
-        </button>
-        <div class="relative mx-2">
-          <input
-            type="text"
-            placeholder="Search"
-            class="h-6 w-36 rounded border-none bg-gray-900 px-1.5 text-sm font-medium placeholder-gray-400"
-          />
-          <div class="absolute inset-y-0 right-0 flex items-center">
-            <Icon class="mr-1.5 text-gray-400" name="carbon:search" />
-          </div>
-        </div>
-        <button class="inline-flex text-gray-200 hover:text-gray-100">
-          <Icon class="mx-2" size="24px" name="material-symbols:inbox" />
-        </button>
-        <button class="inline-flex text-gray-200 hover:text-gray-100">
+    <ClientOnly>
+      <div class="flex h-12 items-center px-2 shadow-sm">
+        <div class="flex items-center">
           <Icon
-            class="mx-2"
+            class="mx-2 font-semibold text-gray-400"
             size="24px"
-            name="ant-design:question-circle-filled"
+            name="mdi:hashtag"
           />
-        </button>
-      </div>
-    </div>
-    <div class="flex flex-1 flex-col">
-      <div class="flex-1 overflow-y-auto">
-        <div v-for="(message, i) in selectedChannel.messages" :key="message.id">
+          <span class="mr-2 whitespace-nowrap font-title text-white">{{
+            selectedChannel.name
+          }}</span>
+        </div>
+
+        <template v-if="selectedChannel.description">
+          <div class="mx-2 hidden h-6 w-px bg-white/[.06] md:block"></div>
           <div
-            v-if="
-              i === 0 || message.user !== selectedChannel.messages[i - 1].user
-            "
-            class="mt-[17px] flex py-0.5 pl-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]"
+            class="mx-2 hidden truncate text-sm font-medium text-gray-200 md:block"
           >
-            <img
-              class="mr-4 mt-0.5 h-10 w-10 rounded-full"
-              :src="message.avatarUrl"
-              alt=""
+            {{ selectedChannel.description }}
+          </div>
+        </template>
+
+        <!-- mobile buttons -->
+        <div class="ml-auto flex items-center md:hidden">
+          <button class="inline-flex text-gray-200 hover:text-gray-100">
+            <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
+          </button>
+          <button class="inline-flex text-gray-200 hover:text-gray-100">
+            <Icon class="mx-2" size="24px" name="mdi:people" />
+          </button>
+        </div>
+        <!-- desktop buttons -->
+        <div class="ml-auto hidden items-center md:flex">
+          <SocketIndicator />
+          <button class="inline-flex text-gray-200 hover:text-gray-100">
+            <Icon class="mx-2" size="24px" name="solar:hashtag-chat-bold" />
+          </button>
+          <button class="inline-flex text-gray-200 hover:text-gray-100">
+            <Icon class="mx-2" size="24px" name="mdi:bell" />
+          </button>
+          <button class="inline-flex text-gray-200 hover:text-gray-100">
+            <Icon class="mx-2" size="24px" name="tabler:pin-filled" />
+          </button>
+          <button class="inline-flex text-gray-200 hover:text-gray-100">
+            <Icon class="mx-2" size="24px" name="mdi:people" />
+          </button>
+          <div class="relative mx-2">
+            <input
+              type="text"
+              placeholder="Search"
+              class="h-6 w-36 rounded border-none bg-gray-900 px-1.5 text-sm font-medium placeholder-gray-400"
             />
-            <div>
-              <p class="flex items-baseline">
-                <span class="mr-2 font-medium text-green-400">
-                  {{ message.user }}
-                </span>
-                <span class="text-xs font-medium text-gray-400">
-                  {{ message.date }}
-                </span>
-              </p>
-              <p class="text-gray-100">{{ message.text }}</p>
+            <div class="absolute inset-y-0 right-0 flex items-center">
+              <Icon class="mr-1.5 text-gray-400" name="carbon:search" />
             </div>
           </div>
-          <div
-            v-else
-            class="py-0.5 pl-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]"
-          >
-            <p class="pl-14 text-gray-100">{{ message.text }}</p>
-          </div>
+          <button class="inline-flex text-gray-200 hover:text-gray-100">
+            <Icon class="mx-2" size="24px" name="material-symbols:inbox" />
+          </button>
+          <button class="inline-flex text-gray-200 hover:text-gray-100">
+            <Icon
+              class="mx-2"
+              size="24px"
+              name="ant-design:question-circle-filled"
+            />
+          </button>
         </div>
       </div>
-      <div class="relative mt-auto flex-shrink-0 px-4 pb-6">
-        <ChatInput />
+      <div class="flex flex-1 flex-col">
+        <ChatMessages class="flex-1 overflow-y-auto" type="channel" />
+        <div class="relative mt-auto flex-shrink-0 px-4 py-6">
+          <ChatInput />
+        </div>
       </div>
-    </div>
+    </ClientOnly>
   </div>
 </template>
