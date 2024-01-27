@@ -77,9 +77,10 @@ function handleSendMessage(e: KeyboardEvent) {
   isTyping.value = false
   socket.emit('stopTyping', channelId, userStore.user?.username)
   clearTimeout(timeout)
-  const data = new FormData()
-  data.append('text', textEl.innerText.trim())
-  // sendMessage(channelId, data)
+  useAPI(`/socket/messages?serverId=${serverId}&channelId=${channelId}`, {
+    method: 'POST',
+    body: { content: textEl.innerText.trim() },
+  })
   // update message
   // cache.setQueryData(`messages-${channelId}`, (d: any) => {
   //   if (!d) return

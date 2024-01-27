@@ -1,6 +1,10 @@
 module.exports = {
   root: true,
-  extends: ['@antfu', 'plugin:prettier/recommended'],
+  extends: [
+    '@antfu',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
+    'plugin:prettier/recommended',
+  ],
   rules: {
     'no-console': 'warn',
     'antfu/if-newline': 'off',

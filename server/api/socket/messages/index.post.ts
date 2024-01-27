@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusMessage: 'Channel ID Missing', statusCode: 400 })
 
   if (!content)
-    throw createError({ statusMessage: 'Content ID Missing', statusCode: 400 })
+    throw createError({ statusMessage: 'Content Missing', statusCode: 400 })
 
   const server = await db.server.findFirst({
     where: {

@@ -6,7 +6,6 @@ export function useAPI<T>(
 ) {
   return useFetch(url, {
     ...options,
-    headers: useRequestHeaders(['cookie']),
     $fetch: useNuxtApp().$api,
   })
 }
