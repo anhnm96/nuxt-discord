@@ -34,8 +34,14 @@ export default {
           900: '#202225',
         },
       },
+      textColor: {
+        link: '#00AFF4',
+        hover: '#dcddde',
+        muted: '#949ba4',
+      },
       backgroundColor: {
         textarea: '#464950',
+        'modifier-hover': 'rgba(79, 84, 92, 0.16)',
       },
     },
   },

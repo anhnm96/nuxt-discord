@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChannelType, MemberRole } from '@prisma/client'
+import { ChannelType } from '@prisma/client'
 import type { Channel } from '@prisma/client'
 import type { CategoryWithChannels, ServerWithDetails } from '@/types'
 import { useModalStore } from '~/stores/modal'
@@ -42,11 +42,12 @@ function toggleCategory(categoryId: string) {
 
 const { $api } = useNuxtApp()
 const { user } = storeToRefs(useAuthStore())
-const role = server.value.members.find(
+const channelStore = useChannelStore()
+const foundMember = server.value.members.find(
   (member) => member.profileId === user.value!.id,
-)?.role
-const isAdmin = role === MemberRole.ADMIN
-const isModerator = isAdmin || role === MemberRole.MODERATOR
+)
+
+if (foundMember) channelStore.setCurrentMember(foundMember)
 
 const { open } = useDialog()
 async function deleteServer() {
@@ -105,25 +106,25 @@ async function deleteChannel(category: CategoryWithChannels, channel: Channel) {
 const modalStore = useModalStore()
 const dropdownMenu = [
   {
-    show: isModerator,
+    show: channelStore.isModerator,
     component: resolveComponent('InviteModal'),
     label: 'Invite People',
     icon: 'material-symbols:person-add',
   },
   {
-    show: isAdmin,
+    show: channelStore.isAdmin,
     component: resolveComponent('ServerSettingsModal'),
     label: 'Server Settings',
     icon: 'lucide:settings',
   },
   {
-    show: isAdmin,
+    show: channelStore.isAdmin,
     component: resolveComponent('MembersModal'),
     label: 'Manage Members',
     icon: 'lucide:users',
   },
   {
-    show: isModerator,
+    show: channelStore.isModerator,
     label: 'Create Channel',
     icon: 'lucide:plus-circle',
     click: () =>
@@ -132,14 +133,14 @@ const dropdownMenu = [
       }),
   },
   {
-    show: isAdmin,
+    show: channelStore.isAdmin,
     component: '',
     label: 'Delete Server',
     icon: 'lucide:trash',
     click: () => deleteServer(),
   },
   {
-    show: !isAdmin,
+    show: !channelStore.isAdmin,
     component: '',
     label: 'Leave Settings',
     icon: 'lucide:log-out',
@@ -172,7 +173,7 @@ const iconMap = {
         >
           <template v-for="(menu, index) in dropdownMenu" :key="menu.label">
             <DropdownMenuSeparator
-              v-if="index === 4 && isModerator"
+              v-if="index === 4 && channelStore.isModerator"
               class="my-1 h-px bg-gray-800"
             />
             <template v-if="menu.show">

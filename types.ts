@@ -1,4 +1,11 @@
-import type { Category, Channel, Member, Server } from '@prisma/client'
+import type {
+  Category,
+  Channel,
+  Member,
+  Message,
+  Profile,
+  Server,
+} from '@prisma/client'
 
 export interface ActiveUserData {
   /**
@@ -19,3 +26,7 @@ export interface ServerWithDetails extends Server {
   categories: CategoryWithChannels[]
   members: Member[]
 }
+
+export type MemberWithProfile = Member & { profile: Profile }
+
+export type MessageWithMember = Message & { member: MemberWithProfile }
