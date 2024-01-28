@@ -6,6 +6,18 @@ const state = reactive({
   cancelText: 'Cancel',
 })
 
+function handleKeyCLose(e: KeyboardEvent) {
+  if (e.key === 'Escape') cancel()
+}
+
+watch(
+  () => state.show,
+  (value) => {
+    if (value) document.addEventListener('keydown', handleKeyCLose)
+    else document.removeEventListener('keydown', handleKeyCLose)
+  },
+)
+
 let close: (msg: string) => void
 
 function open(opts?: any): Promise<string> {

@@ -1,8 +1,5 @@
 <script setup lang="ts">
 const { state, cancel, confirm } = useDialog()
-useEventListener(document, 'keydown', (e) => {
-  if (e.key === 'Escape') cancel()
-})
 </script>
 
 <template>
