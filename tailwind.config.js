@@ -43,6 +43,9 @@ export default {
         textarea: '#464950',
         'modifier-hover': 'rgba(79, 84, 92, 0.16)',
       },
+      boxShadow: {
+        msg: '0 0 0 1px rgba(32,34,37,.6),0 2px 10px 0 rgba(0,0,0,.2)',
+      },
     },
   },
   plugins: [require('@tailwindcss/forms')],

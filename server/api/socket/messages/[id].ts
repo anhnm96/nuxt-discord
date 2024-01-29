@@ -10,8 +10,6 @@ export default defineEventHandler(async (event) => {
 
   const messageId = getRouterParam(event, 'id')
 
-  const { content } = await readBody(event)
-
   if (!serverId)
     throw createError({ statusMessage: 'Server ID Missing', statusCode: 400 })
 
@@ -76,15 +74,12 @@ export default defineEventHandler(async (event) => {
   if (!canModify)
     throw createError({ statusMessage: 'Unauthorized', statusCode: 401 })
 
+  let updateKey = ''
+
   if (event.method === 'DELETE') {
-    message = await db.message.update({
+    message = await db.message.delete({
       where: {
         id: messageId as string,
-      },
-      data: {
-        fileUrl: null,
-        content: 'This message has been deleted.',
-        deleted: true,
       },
       include: {
         member: {
@@ -94,9 +89,12 @@ export default defineEventHandler(async (event) => {
         },
       },
     })
+    updateKey = `chat:${channelId}:messages:delete`
   }
 
   if (event.method === 'PATCH') {
+    const { content } = await readBody(event)
+
     if (!isMessageOwner) {
       throw createError({ statusMessage: 'Unauthorized', statusCode: 401 })
     }
@@ -116,9 +114,9 @@ export default defineEventHandler(async (event) => {
         },
       },
     })
-  }
 
-  const updateKey = `chat:${channelId}:messages:update`
+    updateKey = `chat:${channelId}:messages:update`
+  }
 
   socketServer.io?.emit(updateKey, message)
 

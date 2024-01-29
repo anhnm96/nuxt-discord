@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { format } from 'date-fns'
 import type { MessageWithMember } from '@/types'
 
 const props = defineProps<{
@@ -7,8 +6,6 @@ const props = defineProps<{
   showHeader: boolean
   urlQuery: string
 }>()
-
-const DATE_FORMAT = 'd MMM yyyy, HH:mm'
 
 const isEditing = ref(false)
 const textareaEl = ref<HTMLDivElement>()
@@ -38,7 +35,7 @@ function enableEdit() {
 
 function submitEditMessage() {
   const content = textareaEl.value?.innerText?.trim()
-  console.log('text', content)
+
   if (!content || content === props.message.content) {
     cancelEditMessage()
     return
@@ -70,22 +67,28 @@ function handleKeydownEvent(e: KeyboardEvent) {
   }
 }
 
+function deleteMessage() {
+  useAPI(`/socket/messages/${props.message.id}?${props.urlQuery}`, {
+    method: 'DELETE',
+  })
+}
+
 const [DefineMessageTemplate, ReuseMessageTemplate] = createReusableTemplate<{
   cls?: string
 }>()
 </script>
 
 <template>
-  <div class="">
+  <div>
     <DefineMessageTemplate v-slot="{ cls }">
       <p v-if="!isEditing" class="text-gray-100" :class="[cls]">
         {{ message.content }}
         <time
           v-if="message.createdAt !== message.updatedAt"
-          class="text-muted ml-px text-xs"
+          class="ml-px select-none text-xs text-muted"
           :datetime="message.updatedAt.toString()"
-          :aria-label="format(new Date(message.updatedAt), DATE_FORMAT)"
-          :title="format(new Date(message.updatedAt), DATE_FORMAT)"
+          :aria-label="getTime(message.updatedAt)"
+          :title="getTime(message.updatedAt)"
           >(edited)</time
         >
       </p>
@@ -106,7 +109,11 @@ const [DefineMessageTemplate, ReuseMessageTemplate] = createReusableTemplate<{
           </button>
         </p>
       </div>
-      <ChatActions :message="message" @edit="enableEdit" />
+      <ChatActions
+        :message="message"
+        @edit="enableEdit"
+        @delete="deleteMessage"
+      />
     </DefineMessageTemplate>
     <div
       v-if="showHeader"
@@ -125,16 +132,16 @@ const [DefineMessageTemplate, ReuseMessageTemplate] = createReusableTemplate<{
           {{ message.member.profile.username?.slice(0, 2) }}
         </AvatarFallback>
       </AvatarRoot>
-      <div>
+      <div class="flex-1">
         <p class="flex items-baseline">
           <span class="mr-2 font-medium text-green-400">
             {{ message.member.profile.username }}
           </span>
           <time
-            class="text-muted text-xs font-medium"
+            class="text-xs font-medium text-muted"
             :datetime="message.createdAt.toString()"
           >
-            {{ format(new Date(message.createdAt), DATE_FORMAT) }}
+            {{ getTime(message.createdAt) }}
           </time>
         </p>
         <ReuseMessageTemplate />
@@ -145,11 +152,11 @@ const [DefineMessageTemplate, ReuseMessageTemplate] = createReusableTemplate<{
       class="group relative py-0.5 pl-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]"
     >
       <time
-        class="text-muted absolute bottom-0 left-4 top-0 hidden w-10 select-none items-center justify-end text-xs font-medium group-hover:flex"
+        class="absolute bottom-0 left-4 top-0 hidden w-10 select-none items-center justify-end text-xs font-medium text-muted group-hover:flex"
         :datetime="message.createdAt.toString()"
-        :title="format(new Date(message.createdAt), DATE_FORMAT)"
+        :title="getTime(message.createdAt)"
       >
-        {{ format(new Date(message.createdAt), 'HH:mm') }}
+        {{ getShortenedTime(message.createdAt) }}
       </time>
       <ReuseMessageTemplate cls="pl-14" />
     </div>

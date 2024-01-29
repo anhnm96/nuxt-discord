@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { isSameHour } from 'date-fns'
+
 defineProps<{
   type: string
 }>()
@@ -10,6 +12,7 @@ const chatId = route.params.cid as string
 const queryKey = `chat:${chatId}`
 const addKey = `chat:${chatId}:messages`
 const updateKey = `chat:${chatId}:messages:update`
+const deleteKey = `chat:${chatId}:messages:delete`
 
 const {
   data: messages,
@@ -27,7 +30,7 @@ const {
 
 await suspense()
 
-useChatSocket({ queryKey, addKey, updateKey })
+useChatSocket({ queryKey, addKey, updateKey, deleteKey })
 // useChatScroll({
 //   chatRef,
 //   bottomRef,
@@ -72,7 +75,8 @@ useChatSocket({ queryKey, addKey, updateKey })
           :message="message"
           :show-header="
             i === group.items.length - 1 ||
-            message.memberId !== group.items[i + 1].memberId
+            message.memberId !== group.items[i + 1].memberId ||
+            !isSameHour(message.createdAt, group.items[i + 1].createdAt)
           "
           :url-query="`serverId=${serverId}&channelId=${chatId}`"
         />

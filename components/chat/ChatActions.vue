@@ -2,7 +2,7 @@
 import type { MessageWithMember } from '@/types'
 
 const props = defineProps<{ message: MessageWithMember }>()
-defineEmits(['edit'])
+const emit = defineEmits(['edit', 'delete'])
 const channelStore = useChannelStore()
 const isOwner = computed(
   () => channelStore.currentMember?.id === props.message.member.id,
@@ -15,6 +15,12 @@ const canDeleteMessage = computed(
 const canEditMessage = computed(
   () => !props.message.deleted && isOwner.value && !props.message.fileUrl,
 )
+
+const open = ref(false)
+function handleDelete() {
+  emit('delete')
+  open.value = false
+}
 </script>
 
 <template>
@@ -30,9 +36,16 @@ const canEditMessage = computed(
       <button
         v-if="canDeleteMessage"
         class="grid h-8 w-8 place-items-center hover:bg-modifier-hover hover:text-hover"
+        @click="open = true"
       >
         <Icon name="lucide:trash" />
       </button>
     </div>
+    <DeleteMessageModal
+      v-if="open"
+      :message="message"
+      @cancel="open = false"
+      @delete="handleDelete"
+    />
   </div>
 </template>
