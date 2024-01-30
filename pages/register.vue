@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import * as z from 'zod'
+import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
+
+definePageMeta({
+  layout: false,
+})
 
 const registerSchema = toTypedSchema(
   z.object({
@@ -34,70 +38,81 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
 </script>
 
 <template>
-  <div class="px-content mx-auto grid h-screen max-w-7xl place-items-center">
-    <div class="w-full max-w-lg space-y-4">
-      <div class="flex justify-center">
-        <img
-          class="h-20 w-20 rounded-2xl"
-          src="~/assets/discord.png"
-          alt="logo"
-        />
-      </div>
-      <div class="px-content space-y-4 rounded-md bg-gray-800 pb-8 pt-4">
-        <h2 class="text-center text-2xl font-semibold">Welcome to Discord</h2>
-        <div>
-          <Form
-            v-slot="{ errors, isSubmitting }"
-            :validation-schema="registerSchema"
-            class="space-y-4"
-            @submit="submit"
+  <div class="relative h-screen w-screen">
+    <img
+      draggable="false"
+      class="h-full w-full"
+      src="~/assets/bg-auth.svg"
+      aria-hidden
+    />
+    <div
+      class="absolute left-1/2 top-1/2 w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray-700 p-8"
+    >
+      <h2 class="text-header-primary text-center text-2xl font-semibold">
+        Create an account
+      </h2>
+      <Form
+        v-slot="{ errors, isSubmitting }"
+        :validation-schema="registerSchema"
+        class="mt-5 space-y-5"
+        @submit="submit"
+      >
+        <div class="flex flex-col space-y-2">
+          <label
+            for="email"
+            class="text-header-secondary text-xs font-bold uppercase"
+            >Email</label
           >
-            <div class="flex flex-col space-y-1.5">
-              <label for="email" class="text-sm uppercase">Email</label>
-              <Field
-                id="email"
-                name="email"
-                type="email"
-                class="bg-secondary-alt rounded border border-black px-4 py-2"
-                :class="[errors.email && 'border-red-400']"
-              />
-              <ErrorMessage class="text-red-400" name="email" />
-            </div>
-            <div class="flex flex-col space-y-1.5">
-              <label for="username" class="text-sm uppercase">Username</label>
-              <Field
-                id="username"
-                name="username"
-                type="text"
-                class="bg-secondary-alt rounded border border-black px-4 py-2"
-                :class="[errors.username && 'border-red-400']"
-              />
-              <ErrorMessage class="text-red-400" name="username" />
-            </div>
-            <div class="flex flex-col space-y-1.5">
-              <label for="password" class="text-sm uppercase">Password</label>
-              <Field
-                id="password"
-                name="password"
-                type="password"
-                class="bg-secondary-alt rounded border border-black px-4 py-2"
-                :class="[errors.password && 'border-red-400']"
-              />
-              <ErrorMessage class="text-red-400" name="password" />
-            </div>
-            <button
-              class="bg-purple block w-full rounded py-2 font-semibold text-white"
-              :loading="isSubmitting"
-              type="submit"
-            >
-              Register
-            </button>
-            <NuxtLink to="/login" class="text-blue-500 hover:underline">
-              Already have an account?
-            </NuxtLink>
-          </Form>
+          <Field
+            id="email"
+            name="email"
+            type="email"
+            class="bg-input border-input rounded border px-4 py-2"
+            :class="[errors.email && 'border-red-400']"
+          />
+          <ErrorMessage class="text-red-400" name="email" />
         </div>
-      </div>
+        <div class="flex flex-col space-y-2">
+          <label
+            for="username"
+            class="text-header-secondary text-xs font-bold uppercase"
+            >Username</label
+          >
+          <Field
+            id="username"
+            name="username"
+            type="text"
+            class="bg-input border-input rounded border px-4 py-2"
+            :class="[errors.username && 'border-red-400']"
+          />
+          <ErrorMessage class="text-red-400" name="username" />
+        </div>
+        <div class="flex flex-col space-y-2">
+          <label
+            for="password"
+            class="text-header-secondary text-xs font-bold uppercase"
+            >Password</label
+          >
+          <Field
+            id="password"
+            name="password"
+            type="password"
+            class="bg-input border-input rounded border px-4 py-2"
+            :class="[errors.password && 'border-red-400']"
+          />
+          <ErrorMessage class="text-red-400" name="password" />
+        </div>
+        <BaseButton
+          class="block w-full rounded bg-brand py-2 font-semibold text-white transition hover:bg-brand-560 active:bg-brand-600"
+          :loading="isSubmitting"
+          type="submit"
+        >
+          Register
+        </BaseButton>
+        <NuxtLink to="/login" class="block text-blue-500 hover:underline">
+          Already have an account?
+        </NuxtLink>
+      </Form>
     </div>
   </div>
 </template>

@@ -33,8 +33,11 @@ export default {
           800: '#2F3136',
           900: '#202225',
         },
+        input: '#1e1f22',
       },
       textColor: {
+        'header-primary': '#f2f3f5',
+        'header-secondary': '#b5bac1',
         link: '#00AFF4',
         hover: '#dcddde',
         muted: '#949ba4',
