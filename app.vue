@@ -51,5 +51,13 @@ useHead({
 </script>
 
 <template>
-  <NuxtPage />
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
+
+<style>
+.page-leave-active {
+  transition: all 0.2s;
+}
+</style>

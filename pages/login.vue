@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
 
 definePageMeta({
-  layout: false,
+  layout: 'auth',
 })
 
 const loginSchema = toTypedSchema(
@@ -33,91 +33,85 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
 </script>
 
 <template>
-  <div class="relative h-screen w-screen">
-    <img
-      draggable="false"
-      class="h-full w-full"
-      src="~/assets/bg-auth.svg"
-      aria-hidden
-    />
-    <div
-      class="absolute left-1/2 top-1/2 w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray-700 p-8"
-    >
-      <h2 class="text-header-primary mb-2 text-center text-2xl font-semibold">
-        Test Accounts
-      </h2>
-      <div class="text-header-secondary mb-5 flex justify-between">
-        <div>
-          <p>email: google123@gmail.com</p>
-          <p>password: 123123123</p>
-        </div>
-        <div>
-          <p>email: test123@gmail.com</p>
-          <p>password: 123123123</p>
-        </div>
+  <div>
+    <h2 class="mb-2 text-center text-2xl font-semibold text-header-primary">
+      Test Accounts
+    </h2>
+    <div class="mb-8 flex justify-between text-header-secondary">
+      <div>
+        <p>email: google123@gmail.com</p>
+        <p>password: 123123123</p>
       </div>
-      <h2 class="text-header-primary text-center text-2xl font-semibold">
-        Welcome Back
-      </h2>
-      <p class="text-header-secondary mt-2 text-center">
-        We're so excited to see you again!
-      </p>
-      <Form
-        v-slot="{ errors, isSubmitting }"
-        :validation-schema="loginSchema"
-        class="mt-5"
-        @submit="submit"
-      >
-        <div class="mt-5 flex flex-col space-y-2">
-          <label
-            for="email"
-            class="text-header-secondary text-xs font-bold uppercase"
-            >Email</label
-          >
-          <Field
-            id="email"
-            name="email"
-            type="email"
-            class="border-input bg-input rounded border px-4 py-2"
-            :class="[errors.email && 'border-red-400']"
-          />
-          <ErrorMessage class="text-red-400" name="email" />
-        </div>
-        <div class="mt-5 flex flex-col space-y-2">
-          <label
-            for="password"
-            class="text-header-secondary text-xs font-bold uppercase"
-            >Password</label
-          >
-          <Field
-            id="password"
-            name="password"
-            type="password"
-            class="border-input bg-input rounded border px-4 py-2"
-            :class="[errors.password && 'border-red-400']"
-          />
-          <ErrorMessage class="text-red-400" name="password" />
-        </div>
-        <NuxtLink class="mt-1 inline-block text-blue-500" to="/">
-          Forgot Password?
-        </NuxtLink>
-        <BaseButton
-          class="mt-5 block w-full rounded bg-brand py-2 font-semibold text-white hover:bg-brand-560 active:bg-brand-600"
-          :loading="isSubmitting"
-          type="submit"
-        >
-          Login
-        </BaseButton>
-        <p class="mt-1 text-sm text-muted">
-          Need an account?
-          <NuxtLink
-            to="/register"
-            class="font-semibold text-blue-500 hover:underline"
-          >
-            Register
-          </NuxtLink>
-        </p>
-      </Form>
+      <div>
+        <p>email: test123@gmail.com</p>
+        <p>password: 123123123</p>
+      </div>
     </div>
+    <h2 class="text-center text-2xl font-semibold text-header-primary">
+      Welcome Back
+    </h2>
+    <p class="mt-2 text-center text-header-secondary">
+      We're so excited to see you again!
+    </p>
+    <Form
+      v-slot="{ errors, isSubmitting }"
+      :validation-schema="loginSchema"
+      class="mt-5"
+      @submit="submit"
+    >
+      <div class="mt-5 flex flex-col space-y-2">
+        <label
+          for="email"
+          class="text-xs font-bold uppercase text-header-secondary"
+        >
+          Email
+          <span class="text-red-500">*</span>
+        </label>
+        <Field
+          id="email"
+          name="email"
+          type="email"
+          class="rounded border border-input bg-input px-4 py-2"
+          :class="[errors.email && 'border-red-500']"
+        />
+        <ErrorMessage class="text-red-500" name="email" />
+      </div>
+      <div class="mt-5 flex flex-col space-y-2">
+        <label
+          for="password"
+          class="text-xs font-bold uppercase text-header-secondary"
+        >
+          Password
+          <span class="text-red-500">*</span>
+        </label>
+        <Field
+          id="password"
+          name="password"
+          type="password"
+          class="rounded border border-input bg-input px-4 py-2"
+          :class="[errors.password && 'border-red-500']"
+        />
+        <ErrorMessage class="text-red-500" name="password" />
+      </div>
+      <NuxtLink class="mt-1 inline-block text-blue-500" to="/">
+        Forgot Password?
+      </NuxtLink>
+      <BaseButton
+        class="mt-5 block w-full rounded bg-brand py-2 font-semibold text-white hover:bg-brand-560 active:bg-brand-600"
+        :loading="isSubmitting"
+        type="submit"
+      >
+        Login
+      </BaseButton>
+      <p class="mt-1 text-sm text-muted">
+        Need an account?
+        <NuxtLink
+          to="/register"
+          class="font-semibold text-blue-500 hover:underline"
+        >
+          Register
+        </NuxtLink>
+      </p>
+    </Form>
   </div>
 </template>

@@ -9,6 +9,9 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vueuse/nuxt',
   ],
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in', appear: true },
+  },
   runtimeConfig: {
     jwtSecret: '',
     jwtTokenAudience: '',
@@ -23,6 +26,11 @@ export default defineNuxtConfig({
     dirs: [
       {
         path: '~/components/modals',
+        extensions: ['vue'],
+        pathPrefix: false,
+      },
+      {
+        path: '~/components/chat',
         extensions: ['vue'],
         pathPrefix: false,
       },
