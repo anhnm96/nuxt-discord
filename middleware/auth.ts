@@ -4,10 +4,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const { data, error } = await useAPI<Profile>('/users/me')
 
   if (error.value) {
-    if (process.server)
+    if (import.meta.server)
       return navigateTo(`/login?redirectTo=${to.path}`, { redirectCode: 301 })
 
-    if (process.client)
+    if (import.meta.client)
       return navigateTo(`/login?redirectTo=${to.path}`, { replace: true })
   }
 

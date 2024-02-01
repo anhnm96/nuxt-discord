@@ -1,5 +1,5 @@
 export default defineNuxtPlugin((nuxtApp) => {
-  if (process.server) return nuxtApp.vueApp.directive('focus', {})
+  if (import.meta.server) return nuxtApp.vueApp.directive('focus', {})
 
   nuxtApp.vueApp.directive('focus', {
     mounted(el) {

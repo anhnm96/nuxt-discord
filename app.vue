@@ -2,7 +2,7 @@
 import { io as ClientIO } from 'socket.io-client'
 
 const authStore = useAuthStore()
-if (process.client) {
+if (import.meta.client) {
   const user = localStorage.getItem('user')
   const expiresAt = localStorage.getItem('expiresAt')
   if (!authStore.user && expiresAt && Date.now() < Number(expiresAt) && user) {
