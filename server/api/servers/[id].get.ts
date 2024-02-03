@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     include: {
       categories: {
         orderBy: {
-          name: 'asc',
+          createdAt: 'asc',
         },
         include: {
           channels: {

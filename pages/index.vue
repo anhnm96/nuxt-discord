@@ -1,3 +1,10 @@
+<script setup lang="ts">
+definePageMeta({
+  middleware: 'auth',
+  pageTransition: false,
+})
+</script>
+
 <template>
   <div class="flex w-60 flex-col bg-gray-800">
     <div
