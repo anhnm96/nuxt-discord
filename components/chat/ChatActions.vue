@@ -42,7 +42,7 @@ function handleDelete() {
       </button>
     </div>
     <DeleteMessageModal
-      v-if="open"
+      v-model:open="open"
       :message="message"
       @cancel="open = false"
       @delete="handleDelete"

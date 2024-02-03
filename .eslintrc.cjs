@@ -12,6 +12,7 @@ module.exports = {
     '@stylistic/ts/brace-style': 'off',
     '@stylistic/js/operator-linebreak': 'off',
     'n/prefer-global/process': 'off',
+    'vue/require-toggle-inside-transition': 'off',
   },
   ignorePatterns: ['package.json', 'pnpm-lock.yaml'],
 }

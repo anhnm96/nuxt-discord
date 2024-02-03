@@ -146,3 +146,37 @@ Not supports in Firefox and IE */
 .slide-right-leave-active {
   position: absolute;
 }
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+  transform: scale(0.8) translate(-50%, -50%);
+}
+
+.modal-enter-to,
+.modal-leave-from {
+  opacity: 1;
+  transform: scale(1) translate(-50%, -50%);
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.2s ease;
+}
+
+.modal2-enter-from,
+.modal2-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.modal2-enter-to,
+.modal2-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modal2-enter-active,
+.modal2-leave-active {
+  transition: all 0.2s ease;
+}
