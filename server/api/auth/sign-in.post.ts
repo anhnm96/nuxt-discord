@@ -4,6 +4,7 @@ import type { Profile } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import db from '@/lib/prisma'
 import type { ActiveUserData } from '@/types'
+import { loginSchema } from '@/validations/auth'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
@@ -32,7 +33,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const signInDto = await readBody(event)
+  const signInDto = await readValidatedBody(event, loginSchema.parse)
   const user = await db.profile.findFirst({
     where: {
       email: signInDto.email,

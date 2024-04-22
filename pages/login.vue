@@ -1,21 +1,12 @@
 <script setup lang="ts">
-import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
+import { loginSchema } from '@/validations/auth'
 
 definePageMeta({
   layout: 'auth',
 })
 
-const loginSchema = toTypedSchema(
-  z.object({
-    email: z.string().min(1, {
-      message: 'Server name is required.',
-    }),
-    password: z.string().min(1, {
-      message: 'Password is required.',
-    }),
-  }),
-)
+const typedLoginSchema = toTypedSchema(loginSchema)
 
 const { login } = useAuthStore()
 
@@ -34,19 +25,6 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
 
 <template>
   <div>
-    <h2 class="mb-2 text-center text-2xl font-semibold text-header-primary">
-      Test Accounts
-    </h2>
-    <div class="mb-8 flex justify-between text-header-secondary">
-      <div>
-        <p>email: google123@gmail.com</p>
-        <p>password: 123123123</p>
-      </div>
-      <div>
-        <p>email: test123@gmail.com</p>
-        <p>password: 123123123</p>
-      </div>
-    </div>
     <h2 class="text-center text-2xl font-semibold text-header-primary">
       Welcome Back
     </h2>
@@ -55,7 +33,7 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
     </p>
     <Form
       v-slot="{ errors, isSubmitting }"
-      :validation-schema="loginSchema"
+      :validation-schema="typedLoginSchema"
       class="mt-5"
       @submit="submit"
     >
@@ -113,5 +91,20 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
         </NuxtLink>
       </p>
     </Form>
+    <h2
+      class="mb-2 mt-4 text-center text-2xl font-semibold text-header-primary"
+    >
+      Test Accounts
+    </h2>
+    <div class="flex justify-between text-header-secondary">
+      <div>
+        <p>email: google123@gmail.com</p>
+        <p>password: 123123123</p>
+      </div>
+      <div>
+        <p>email: test123@gmail.com</p>
+        <p>password: 123123123</p>
+      </div>
+    </div>
   </div>
 </template>
