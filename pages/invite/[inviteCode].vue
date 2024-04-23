@@ -12,6 +12,7 @@ onMounted(async () => {
       method: 'POST',
       body: { inviteCode },
     })
+    refreshNuxtData('servers')
     if (serverId) navigateTo(`/channels/${serverId}`, { replace: true })
     else navigateTo('/', { replace: true })
   } catch (err) {
