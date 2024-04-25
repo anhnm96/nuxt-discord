@@ -15,9 +15,9 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
     await login(values)
   } catch (err: any) {
     if (err?.response?.status === 401) {
-      setErrors({ password: 'Invalid credentials' })
+      setErrors({ other: err?.response?.statusText })
     } else {
-      // setErrors(toErrorMap(err))
+      setErrors(toErrorMap(err))
     }
   }
 }
@@ -49,7 +49,7 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
           id="email"
           name="email"
           type="email"
-          class="rounded border border-input bg-input px-4 py-2"
+          class="rounded border border-input bg-input px-4 py-2 text-header-primary"
           :class="[errors.email && 'border-red-500']"
         />
         <ErrorMessage class="text-red-500" name="email" />
@@ -66,10 +66,13 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
           id="password"
           name="password"
           type="password"
-          class="rounded border border-input bg-input px-4 py-2"
+          class="rounded border border-input bg-input px-4 py-2 text-header-primary"
           :class="[errors.password && 'border-red-500']"
         />
         <ErrorMessage class="text-red-500" name="password" />
+      </div>
+      <div>
+        <ErrorMessage class="text-red-500" name="other" />
       </div>
       <NuxtLink class="mt-1 inline-block text-blue-500" to="/">
         Forgot Password?

@@ -1,38 +1,20 @@
 <script setup lang="ts">
-import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
+import { registerSchema } from '@/validations/auth'
 
 definePageMeta({
   layout: 'auth',
 })
 
-const registerSchema = toTypedSchema(
-  z.object({
-    username: z.string().min(3).max(30).trim(),
-    email: z.string().email().toLowerCase(),
-    password: z
-      .string()
-      .min(6, { message: 'Password must be at least 6 characters long' })
-      .max(150),
-  }),
-)
+const typedRegisterSchema = toTypedSchema(registerSchema)
+
+const { register } = useAuthStore()
 
 async function submit(values: any, { setErrors }: Record<string, any>) {
   try {
-    const { data } = await useAPI('/auth/sign-up', {
-      method: 'post',
-      body: values,
-    })
-    console.log('data', data)
-    // const { data } = await register(values)
-    // if (data) {
-    //   userStore.setUser(data)
-    //   router.push('/channels/me')
-    // }
+    await register(values)
   } catch (err: any) {
-    if (err?.response?.data?.errors) {
-      // setErrors(toErrorMap(err))
-    }
+    setErrors(toErrorMap(err))
   }
 }
 </script>
@@ -44,7 +26,7 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
     </h2>
     <Form
       v-slot="{ errors, isSubmitting }"
-      :validation-schema="registerSchema"
+      :validation-schema="typedRegisterSchema"
       class="mt-5 space-y-5"
       @submit="submit"
     >
@@ -60,7 +42,7 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
           id="email"
           name="email"
           type="email"
-          class="rounded border border-input bg-input px-4 py-2"
+          class="rounded border border-input bg-input px-4 py-2 text-header-primary"
           :class="[errors.email && 'border-red-500']"
         />
         <ErrorMessage class="text-red-500" name="email" />
@@ -77,7 +59,7 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
           id="username"
           name="username"
           type="text"
-          class="rounded border border-input bg-input px-4 py-2"
+          class="rounded border border-input bg-input px-4 py-2 text-header-primary"
           :class="[errors.username && 'border-red-500']"
         />
         <ErrorMessage class="text-red-500" name="username" />
@@ -94,7 +76,7 @@ async function submit(values: any, { setErrors }: Record<string, any>) {
           id="password"
           name="password"
           type="password"
-          class="rounded border border-input bg-input px-4 py-2"
+          class="rounded border border-input bg-input px-4 py-2 text-header-primary"
           :class="[errors.password && 'border-red-500']"
         />
         <ErrorMessage class="text-red-500" name="password" />

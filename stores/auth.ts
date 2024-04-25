@@ -9,23 +9,32 @@ interface LoginResponse {
 
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<Profile | null>(null)
+  const { $api } = useNuxtApp()
 
   async function login(payload: any) {
     const route = useRoute()
-    const { data, error } = await useAPI<LoginResponse>('/auth/sign-in', {
+    const data = await $api<LoginResponse>('/auth/sign-in', {
       method: 'post',
       body: payload,
     })
 
-    if (error.value) throw new Error(error.value.statusMessage)
+    localStorage.setItem('user', JSON.stringify(data.user))
+    localStorage.setItem('expiresAt', data.expiresAt.toString())
+    user.value = data.user
+    const redirectTo = (route.query.redirectTo as string) || '/'
+    navigateTo(redirectTo, { replace: true })
+  }
 
-    if (data.value) {
-      localStorage.setItem('user', JSON.stringify(data.value.user))
-      localStorage.setItem('expiresAt', data.value.expiresAt.toString())
-      user.value = data.value.user
-      const redirectTo = (route.query.redirectTo as string) || '/'
-      navigateTo(redirectTo, { replace: true })
-    }
+  async function register(payload: any) {
+    const data = await $api<LoginResponse>('/auth/sign-up', {
+      method: 'post',
+      body: payload,
+    })
+
+    localStorage.setItem('user', JSON.stringify(data.user))
+    localStorage.setItem('expiresAt', data.expiresAt.toString())
+    user.value = data.user
+    navigateTo('/', { replace: true })
   }
 
   async function logout() {
@@ -35,5 +44,5 @@ export const useAuthStore = defineStore('auth-store', () => {
     navigateTo('/')
   }
 
-  return { user, login, logout }
+  return { user, login, register, logout }
 })
