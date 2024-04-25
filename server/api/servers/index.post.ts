@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
         create: [{ profileId: event.context.auth.sub, role: MemberRole.ADMIN }],
       },
     },
+    include: { categories: true },
   })
 
   return server

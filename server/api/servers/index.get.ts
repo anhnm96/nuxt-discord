@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
         },
       },
     },
+    include: { categories: true },
   })
 
   return servers

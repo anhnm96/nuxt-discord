@@ -17,7 +17,7 @@ if (!server.value)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
 
 if (!route.params.cid) {
-  const defaultChannel = server.value.categories[1].channels[0]
+  const defaultChannel = server.value.categories[0].channels[0]
 
   navigateTo(`/channels/${route.params.sid}/${defaultChannel.id}`, {
     replace: true,
