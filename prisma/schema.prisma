@@ -15,6 +15,7 @@ model Profile {
   imageUrl  String?   @db.Text
   email     String    @unique
   password  String
+  isOnline  Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   servers   Server[]

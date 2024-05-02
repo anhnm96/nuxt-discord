@@ -14,7 +14,7 @@ const { data: channel } = await useAPI<Channel>(
 
 <template>
   <div class="flex min-w-0 flex-1 flex-shrink flex-col bg-gray-700">
-    <div v-if="channel" class="flex h-12 items-center px-2 shadow-sm">
+    <div v-if="channel" class="flex h-12 items-center px-2 shadow-md">
       <div class="flex items-center">
         <Icon
           class="mx-2 font-semibold text-gray-400"
@@ -81,16 +81,19 @@ const { data: channel } = await useAPI<Channel>(
         </button>
       </div>
     </div>
-    <div class="flex flex-1 flex-col">
-      <ChatMessages
-        v-if="channel"
-        class="flex-1 overflow-y-auto"
-        :channel="channel"
-        type="channel"
-      />
-      <div class="relative mt-auto flex-shrink-0 px-4 py-6">
-        <ChatInput />
+    <div class="flex flex-1">
+      <div class="flex flex-1 flex-col">
+        <ChatMessages
+          v-if="channel"
+          class="flex-1 overflow-y-auto"
+          :channel="channel"
+          type="channel"
+        />
+        <div class="relative mt-auto flex-shrink-0 px-4 py-6">
+          <ChatInput />
+        </div>
       </div>
+      <MemberList v-if="channel" :channel-name="channel.name" />
     </div>
   </div>
 </template>
