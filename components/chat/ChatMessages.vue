@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { Channel } from '@prisma/client'
 import { isSameHour } from 'date-fns'
 
 defineProps<{
+  channel: Channel
   type: string
 }>()
 
@@ -68,6 +70,35 @@ useChatSocket({ queryKey, addKey, updateKey, deleteKey })
       v-if="status === 'success' && messages"
       class="mt-auto flex flex-1 flex-col-reverse"
     >
+      <!-- intro -->
+      <div class="bg-divider m-4 h-px"></div>
+      <div class="select-none space-y-2 px-4 pt-4">
+        <div>
+          <img
+            class="h-20 w-20 rounded-full"
+            src="@/assets/discord.png"
+            alt="logo"
+          />
+        </div>
+        <template v-if="$route.params.cid">
+          <h1 class="text-4xl font-bold text-white">
+            Welcome to <span class="italic">#{{ channel.name }}!</span>
+          </h1>
+          <p class="">
+            This is the start of the
+            <span class="italic">#{{ channel.name }}</span> channel.
+          </p>
+        </template>
+        <template v-else>
+          <h1 class="truncate text-4xl font-bold text-white">
+            {{ channel.name }}
+          </h1>
+          <p class="">
+            This is the beginning of your direct message history with
+            <b>@{{ channel.name }}</b>
+          </p>
+        </template>
+      </div>
       <template v-for="(group, groupIndex) in messages.pages" :key="groupIndex">
         <ChatItem
           v-for="(message, i) in group.items"

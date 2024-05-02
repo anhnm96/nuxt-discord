@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Server } from '@prisma/client'
 import { ServerSchema } from '@/validations/server'
+import { createServerHandler } from '~/api/handlers/servers'
 
 const open = ref(false)
 const { user } = storeToRefs(useAuthStore())
@@ -9,14 +9,11 @@ const showModal = ref('select')
 const transition = ref('slide-left')
 async function createServer(values: any, { setErrors }: any) {
   try {
-    await useAPI<Server>('/servers', {
-      method: 'POST',
-      body: values,
-    })
+    await createServerHandler(values)
     refreshNuxtData('servers')
     open.value = false
   } catch (err: any) {
-    // setErrors(toErrorMap(err))
+    setErrors(toErrorMap(err))
   }
 }
 </script>

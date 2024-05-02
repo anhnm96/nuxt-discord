@@ -34,6 +34,7 @@ export default {
           900: '#202225',
         },
         input: '#1e1f22',
+        divider: 'hsla(0, 0%, 100%, 0.06)',
       },
       textColor: {
         'header-primary': '#f2f3f5',

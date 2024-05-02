@@ -82,7 +82,12 @@ const { data: channel } = await useAPI<Channel>(
       </div>
     </div>
     <div class="flex flex-1 flex-col">
-      <ChatMessages class="flex-1 overflow-y-auto" type="channel" />
+      <ChatMessages
+        v-if="channel"
+        class="flex-1 overflow-y-auto"
+        :channel="channel"
+        type="channel"
+      />
       <div class="relative mt-auto flex-shrink-0 px-4 py-6">
         <ChatInput />
       </div>
