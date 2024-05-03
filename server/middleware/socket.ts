@@ -10,5 +10,9 @@ export default defineEventHandler((event) => {
       path,
       addTrailingSlash: false,
     })
+    socketServer.init?.()
+  }
+  if (!socketServer.userId && event.context.auth?.sub) {
+    socketServer.userId = event.context.auth.sub
   }
 })

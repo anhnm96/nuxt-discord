@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import useMemberSocket from '~/api/ws/useMemberSocket'
 import type { MemberWithProfile } from '~/types'
 
 defineProps<{
@@ -9,6 +10,8 @@ const route = useRoute()
 const serverId = route.params.sid as string
 const { data: members, suspense } = useGetServerMembers(serverId)
 await suspense()
+
+useMemberSocket(serverId)
 
 const online = computed(
   () =>

@@ -71,7 +71,7 @@ useChatSocket({ queryKey, addKey, updateKey, deleteKey })
       class="mt-auto flex flex-1 flex-col-reverse"
     >
       <!-- intro -->
-      <div class="bg-divider m-4 h-px"></div>
+      <div class="m-4 h-px bg-divider"></div>
       <div class="select-none space-y-2 px-4 pt-4">
         <div>
           <img

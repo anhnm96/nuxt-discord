@@ -18,10 +18,12 @@ const socket = ClientIO(useRuntimeConfig().public.apiBase as string, {
 })
 
 socket.on('connect', () => {
+  socket.emit('toggleOnline')
   isConnected.value = true
 })
 
 socket.on('disconnect', () => {
+  socket.emit('toggleOffline')
   isConnected.value = false
 })
 
