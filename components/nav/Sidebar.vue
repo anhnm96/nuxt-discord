@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { Server } from '@prisma/client'
+import { useGetServerList } from '~/stores/server'
 
-const { data: servers } = useAPI<Server[]>('/servers', { key: 'servers' })
+const { data: servers, suspense } = useGetServerList()
+await suspense()
 
 function getServerName(name: string) {
   const nameArr = name.split(' ').slice(0, 2)

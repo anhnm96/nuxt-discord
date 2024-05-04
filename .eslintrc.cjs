@@ -13,6 +13,7 @@ module.exports = {
     '@stylistic/js/operator-linebreak': 'off',
     'n/prefer-global/process': 'off',
     'vue/require-toggle-inside-transition': 'off',
+    '@tanstack/query/exhaustive-deps': 'off',
   },
   ignorePatterns: ['package.json', 'pnpm-lock.yaml'],
 }

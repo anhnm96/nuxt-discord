@@ -1,16 +1,23 @@
 <script setup lang="tsx">
 import type { MemberRole } from '@prisma/client'
+import { useQueryClient } from '@tanstack/vue-query'
 import { Icon } from '#components'
+import type { ServerWithDetails } from '~/types'
 
 const { $api } = useNuxtApp()
 const route = useRoute()
-const { data: server } = useNuxtData(`server-${route.params.sid}`)
+const queryClient = useQueryClient()
+const server = queryClient.getQueryData<ServerWithDetails>([
+  cKey(route.params.sid as string),
+])
+if (!server)
+  throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
 const loadingId = ref('')
 
 async function changeRole(memberId: string, role: MemberRole) {
   try {
     loadingId.value = memberId
-    await $api(`/members/${memberId}?serverId=${server.value.id}`, {
+    await $api(`/members/${memberId}?serverId=${server!.id}`, {
       method: 'PATCH',
       body: { role },
     })
@@ -25,7 +32,7 @@ async function changeRole(memberId: string, role: MemberRole) {
 async function kick(memberId: string) {
   try {
     loadingId.value = memberId
-    await $api(`/members/${memberId}?serverId=${server.value.id}`, {
+    await $api(`/members/${memberId}?serverId=${server!.id}`, {
       method: 'DELETE',
     })
     refreshNuxtData(`server-${route.params.sid}`)

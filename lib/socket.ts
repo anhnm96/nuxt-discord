@@ -54,6 +54,14 @@ socketServer.init = () => {
         socket.to(s.id).emit('toggle_offline', id)
       })
     })
+
+    socket.on('joinServer', (serverId: string) => {
+      socket.join(serverId)
+    })
+
+    socket.on('leaveServer', (serverId: string) => {
+      socket.leave(serverId)
+    })
   })
 }
 

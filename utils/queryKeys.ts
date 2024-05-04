@@ -1,4 +1,4 @@
-export const gKey = 'guilds'
+export const gKey = 'servers'
 export const dmKey = 'dms'
 export const aKey = 'account'
 export const fKey = 'friends'

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { Channel } from '@prisma/client'
 import { ChannelType } from '@prisma/client'
-import type { CategoryWithChannels, ServerWithDetails } from '@/types'
+import type { CategoryWithChannels } from '@/types'
+import { useGetServetDetails } from '~/stores/server'
+import useChannelSocket from '~/api/ws/useChannelSocket'
 
 definePageMeta({
   middleware: ['auth'],
@@ -9,10 +11,12 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { data: server, status } = await useAPI<ServerWithDetails>(
-  `/servers/${route.params.sid}`,
-  { key: `server-${route.params.sid}` },
-)
+
+const serverId = route.params.sid as string
+const { data: server, suspense } = useGetServetDetails(serverId)
+await suspense()
+useChannelSocket(serverId, cKey(serverId))
+
 if (!server.value)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
 

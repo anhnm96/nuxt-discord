@@ -1,5 +1,6 @@
 import { MemberRole } from '@prisma/client'
 import db from '@/lib/prisma'
+import socketServer from '~/lib/socket'
 
 export default defineEventHandler(async (event) => {
   const { serverId, categoryId } = getQuery<{
@@ -25,7 +26,7 @@ export default defineEventHandler(async (event) => {
       status: 400,
     })
 
-  const server = await db.category.update({
+  const category = await db.category.update({
     where: {
       id: categoryId,
       server: {
@@ -57,5 +58,6 @@ export default defineEventHandler(async (event) => {
     },
   })
 
-  return server
+  socketServer.io?.to(serverId).emit('edit_channel', category)
+  return category
 })

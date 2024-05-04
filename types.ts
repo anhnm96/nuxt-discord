@@ -24,7 +24,7 @@ export interface ActiveUserData {
 export type CategoryWithChannels = Category & { channels: Channel[] }
 export interface ServerWithDetails extends Server {
   categories: CategoryWithChannels[]
-  members: Member[]
+  members: MemberWithProfile[]
 }
 
 export type MemberWithProfile = Member & { profile: Profile }

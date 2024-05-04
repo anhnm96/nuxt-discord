@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import type { Server } from '@prisma/client'
+import { useQueryClient } from '@tanstack/vue-query'
 import { ServerSchema } from '@/validations/server'
+import type { ServerWithDetails } from '~/types'
 
 const open = ref(false)
 const route = useRoute()
-const { data: server } = useNuxtData(`server-${route.params.sid}`)
+const queryClient = useQueryClient()
+const server = queryClient.getQueryData<ServerWithDetails>([
+  cKey(route.params.sid as string),
+])
+if (!server)
+  throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
 const formValues = {
-  name: server.value.name,
+  name: server.name,
 }
 
 async function handleDeleteServer() {
@@ -107,7 +113,7 @@ async function handleInvalidateInvites() {
                       />
                       <ErrorMessage name="name" class="text-red-400" />
                     </div>
-                    <div class="bg-divider my-4 h-px"></div>
+                    <div class="my-4 h-px bg-divider"></div>
                     <div class="space-y-2">
                       <h5 class="font-semibold">Additional Configuration</h5>
                       <div class="flex justify-between">
