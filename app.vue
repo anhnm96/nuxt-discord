@@ -13,7 +13,7 @@ if (import.meta.client) {
 // setup socket
 const isConnected = ref(false)
 const socket = ClientIO(useRuntimeConfig().public.apiBase as string, {
-  path: '/api/socket/io',
+  path: '/api/ws',
   addTrailingSlash: false,
 })
 
@@ -27,7 +27,8 @@ socket.on('disconnect', () => {
   isConnected.value = false
 })
 
-onBeforeUnmount(() => {
+window.addEventListener('beforeunload', () => {
+  socket.emit('toggleOffline')
   socket.disconnect()
 })
 
