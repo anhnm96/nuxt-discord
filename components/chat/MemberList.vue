@@ -13,17 +13,13 @@ await suspense()
 
 useMemberSocket(serverId)
 
-const online = computed(
-  () =>
-    members.value?.filter(
-      (member: MemberWithProfile) => member.profile.isOnline,
-    ),
+const online = computed(() =>
+  members.value?.filter((member: MemberWithProfile) => member.profile.isOnline),
 )
-const offline = computed(
-  () =>
-    members.value?.filter(
-      (member: MemberWithProfile) => !member.profile.isOnline,
-    ),
+const offline = computed(() =>
+  members.value?.filter(
+    (member: MemberWithProfile) => !member.profile.isOnline,
+  ),
 )
 </script>
 

@@ -7,34 +7,30 @@ export default function useMemberSocket(serverId: string) {
   const key = mKey(serverId)
 
   onMounted(() => {
-    socket.on('toggle_online', (memberId: string) => {
+    socket.on('toggle_online', (profileId: string) => {
       cache.setQueryData(
         [key],
         (data: MemberWithProfile[] | undefined): any => {
           if (!data) return
-          const res = [...data]
-          const index = res.findIndex((m) => m.id === memberId)
-          if (index === -1) return
-          const clonedObj = { ...res[index] }
-          clonedObj.profile.isOnline = true
-          res[index] = clonedObj
+          const res = structuredClone(data)
+          const member = res.find((m) => m.profileId === profileId)
+          if (!member) return
+          member.profile.isOnline = true
 
           return res
         },
       )
     })
 
-    socket.on('toggle_offline', (memberId: string) => {
+    socket.on('toggle_offline', (profileId: string) => {
       cache.setQueryData(
         [key],
         (data: MemberWithProfile[] | undefined): any => {
           if (!data) return
-          const res = [...data]
-          const index = res.findIndex((m) => m.id === memberId)
-          if (index === -1) return
-          const clonedObj = { ...res[index] }
-          clonedObj.profile.isOnline = false
-          res[index] = clonedObj
+          const res = structuredClone(data)
+          const member = res.find((m) => m.profileId === profileId)
+          if (!member) return
+          member.profile.isOnline = false
 
           return res
         },
