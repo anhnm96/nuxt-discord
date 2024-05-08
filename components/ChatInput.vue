@@ -7,16 +7,16 @@ const userStore = useAuthStore()
 const channelStore = useChannelStore()
 const isTyping = ref(false)
 const inputEl = ref<HTMLDivElement | null>(null)
-// const channel: any = serverId
+const { data: channel, suspense } = useGetCurrentChannel(channelId)
+await suspense()
 // ? useGetCurrentChannel(serverId, channelId)
 // : useGetCurrentDM(channelId)
 
 const placeholder = computed(() => {
-  return ''
   // if (channel.value?.user) {
   //   return `Message @${channel.value.user.username}`
   // }
-  // return `Message #${channel.value?.name}`
+  return `Message #${channel.value?.name}`
 })
 
 let timeout: NodeJS.Timeout
@@ -127,7 +127,7 @@ const typingString = computed(() => {
     <div class="relative flex-auto">
       <div
         v-show="showPlaceholder"
-        class="text-muted pointer-events-none absolute left-0 top-0 py-2.5 pr-4"
+        class="pointer-events-none absolute left-0 top-0 py-2.5 pr-4 text-muted"
         aria-hidden="true"
       >
         {{ placeholder }}

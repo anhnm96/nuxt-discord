@@ -1,4 +1,6 @@
 import { type Member, MemberRole } from '@prisma/client'
+import { useQuery } from '@tanstack/vue-query'
+import { getChannel } from '~/api/handlers/channel'
 
 interface ChannelState {
   currentMember: Member | null | undefined
@@ -32,3 +34,10 @@ export const useChannelStore = defineStore('channel-store', {
     },
   },
 })
+
+export function useGetCurrentChannel(channelId: string) {
+  return useQuery({
+    queryKey: [`channels-${channelId}`],
+    queryFn: () => getChannel(channelId),
+  })
+}

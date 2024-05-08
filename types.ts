@@ -30,3 +30,8 @@ export interface ServerWithDetails extends Server {
 export type MemberWithProfile = Member & { profile: Profile }
 
 export type MessageWithMember = Message & { member: MemberWithProfile }
+
+export type ChannelWithDetails = Channel & {
+  profile: Profile
+  category: Category
+}

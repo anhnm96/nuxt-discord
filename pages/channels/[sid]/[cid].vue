@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import type { Channel } from '@prisma/client'
-
 definePageMeta({
   middleware: ['auth'],
 })
 
 const route = useRoute()
-const { data: channel } = await useAPI<Channel>(
-  `/channels/${route.params.cid}`,
-  { key: `channel-${route.params.cid}` },
+const { data: channel, suspense } = useGetCurrentChannel(
+  route.params.cid as string,
 )
+await suspense()
 </script>
 
 <template>
