@@ -3,16 +3,17 @@ import { Server as Engine } from 'engine.io'
 import { Server } from 'socket.io'
 import { defineEventHandler } from 'h3'
 import db from '@/lib/prisma'
+import socketServer from '~/lib/socket'
 
 export default defineNitroPlugin((nitroApp: NitroApp) => {
   const engine = new Engine()
-  const io = new Server()
+  socketServer.io = new Server()
 
-  io.bind(engine)
+  socketServer.io.bind(engine)
 
-  io.on('connection', (socket) => {
+  socketServer.io.on('connection', (socket) => {
     socket.on('message', async (message: any) => {
-      io.emit('message', {
+      socketServer.io?.emit('message', {
         type: 'user',
         author: message.author,
         content: message.content,
