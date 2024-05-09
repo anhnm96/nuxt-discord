@@ -1,14 +1,15 @@
 import { useQuery } from '@tanstack/vue-query'
 import type { Server } from '@prisma/client'
-import { gKey, mKey } from '~/utils/queryKeys'
 import {
   getServerDetails,
   getServerMembers,
   getUserServers,
 } from '~/api/handlers/servers'
 
+export const serversKey = 'servers'
+
 export function useGetServerList() {
-  return useQuery({ queryKey: [gKey], queryFn: () => getUserServers() })
+  return useQuery({ queryKey: [serversKey], queryFn: () => getUserServers() })
 }
 
 export function useGetCurrentServer(serverId: string) {
@@ -17,17 +18,15 @@ export function useGetCurrentServer(serverId: string) {
 }
 
 export function useGetServerMembers(serverId: string) {
-  const key = mKey(serverId)
   return useQuery({
-    queryKey: [key],
+    queryKey: [serversKey, serverId, 'members'],
     queryFn: () => getServerMembers(serverId),
   })
 }
 
 export function useGetServetDetails(serverId: string) {
-  const key = cKey(serverId)
   return useQuery({
-    queryKey: [key],
+    queryKey: [serversKey, serverId],
     queryFn: () => getServerDetails(serverId),
   })
 }

@@ -1,6 +1,7 @@
 import { MemberRole } from '@prisma/client'
 import db from '@/lib/prisma'
 import socketServer from '~/lib/socket'
+import { ChannelSchema } from '~/validations/channel'
 
 export default defineEventHandler(async (event) => {
   const { serverId, categoryId } = getQuery<{
@@ -18,7 +19,7 @@ export default defineEventHandler(async (event) => {
   if (!channelId)
     return createError({ statusMessage: 'Channel ID missing', status: 400 })
 
-  const { name } = await readBody(event)
+  const name = await readValidatedBody(event, ChannelSchema.shape.name.parse)
 
   if (name === 'general')
     return createError({

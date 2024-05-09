@@ -1,22 +1,9 @@
 <script setup lang="ts">
 import type { Channel } from '@prisma/client'
 import { ChannelType } from '@prisma/client'
-import { z } from 'zod'
-import { toTypedSchema } from '@vee-validate/zod'
-
-const ChannelSchema = toTypedSchema(
-  z.object({
-    name: z
-      .string()
-      .min(1, {
-        message: 'Channel name is required.',
-      })
-      .refine((name) => name !== 'general', {
-        message: 'Channel name cannot be "general"',
-      }),
-    type: z.nativeEnum(ChannelType),
-  }),
-)
+import { useQueryClient } from '@tanstack/vue-query'
+import { createChannel, updateChannel } from '~/api/handlers/channel'
+import { TypedChannelSchema } from '~/validations/channel'
 
 const modalStore = useModalStore()
 
@@ -41,36 +28,26 @@ watchEffect(() => {
   }
 })
 
-const { $api } = useNuxtApp()
 const route = useRoute()
+const serverId = route.params.sid as string
+const queryClient = useQueryClient()
 async function handleCreateChannel(values: any, { setErrors }: any) {
   try {
     if (modalStore.type === 'createChannel') {
-      await $api(
-        `/channels?serverId=${route.params.sid}&categoryId=${
-          modalStore.data.category!.id
-        }`,
-        {
-          method: 'POST',
-          body: values,
-        },
-      )
+      await createChannel(serverId, modalStore.data.category!.id, values)
     } else {
-      await $api(
-        `/channels/${modalStore.data.channel!.id}?serverId=${
-          route.params.sid
-        }&categoryId=${modalStore.data.category!.id}`,
-        {
-          method: 'PATCH',
-          body: values,
-        },
+      await updateChannel(
+        modalStore.data.channel!.id,
+        serverId,
+        modalStore.data.category!.id,
+        values,
       )
     }
-    refreshNuxtData(`server-${route.params.sid}`)
+    queryClient.invalidateQueries({ queryKey: [serversKey, serverId] })
     modalStore.close()
   } catch (err: any) {
     console.error(err)
-    // setErrors(toErrorMap(err))
+    setErrors(toErrorMap(err))
   }
 }
 </script>
@@ -108,7 +85,7 @@ async function handleCreateChannel(values: any, { setErrors }: any) {
                 </header>
                 <Form
                   v-slot="{ isSubmitting, values }"
-                  :validation-schema="ChannelSchema"
+                  :validation-schema="TypedChannelSchema"
                   :initial-values="initialValues"
                   @submit="handleCreateChannel"
                 >
