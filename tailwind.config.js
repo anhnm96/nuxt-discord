@@ -46,6 +46,8 @@ export default {
       backgroundColor: {
         textarea: '#464950',
         'modifier-hover': 'rgba(79, 84, 92, 0.16)',
+        'secondary-alt': '#292b2f',
+        'modifier-selected': 'rgba(79, 84, 92, 0.32)',
       },
       boxShadow: {
         msg: '0 0 0 1px rgba(32,34,37,.6),0 2px 10px 0 rgba(0,0,0,.2)',

@@ -1,4 +1,5 @@
 import type { Profile } from '@prisma/client'
+import { useQueryClient } from '@tanstack/vue-query'
 
 interface LoginResponse {
   accessToken: string
@@ -10,6 +11,7 @@ interface LoginResponse {
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<Profile | null>(null)
   const { $api } = useNuxtApp()
+  const queryClient = useQueryClient()
 
   async function login(payload: any) {
     const route = useRoute()
@@ -40,6 +42,7 @@ export const useAuthStore = defineStore('auth-store', () => {
   async function logout() {
     await useAPI('/auth/sign-out', { method: 'POST' })
     user.value = null
+    queryClient.clear()
     localStorage.clear()
     navigateTo('/')
   }

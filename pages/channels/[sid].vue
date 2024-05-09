@@ -294,6 +294,7 @@ const iconMap = {
         </div>
       </template>
     </div>
+    <UserPanel />
   </div>
   <ClientOnly>
     <NuxtPage />
