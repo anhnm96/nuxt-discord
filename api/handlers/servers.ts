@@ -2,7 +2,7 @@ import type { Server } from '@prisma/client'
 import type { MemberWithProfile, ServerWithDetails } from '~/types'
 import type { ServerPayload } from '~/validations/server'
 
-export function createServerHandler(payload: ServerPayload) {
+export function createServer(payload: ServerPayload) {
   return useAPI<Server>('/servers', {
     method: 'POST',
     body: payload,

@@ -1,16 +1,18 @@
 <script setup lang="ts">
+import { useQueryClient } from '@tanstack/vue-query'
 import { ServerSchema } from '@/validations/server'
-import { createServerHandler } from '~/api/handlers/servers'
+import { createServer } from '~/api/handlers/servers'
 
+const queryClient = useQueryClient()
 const open = ref(false)
 const { user } = storeToRefs(useAuthStore())
 
 const showModal = ref('select')
 const transition = ref('slide-left')
-async function createServer(values: any, { setErrors }: any) {
+async function handleCreateServer(values: any, { setErrors }: any) {
   try {
-    await createServerHandler(values)
-    refreshNuxtData('servers')
+    await createServer(values)
+    queryClient.invalidateQueries({ queryKey: [serversKey] })
     open.value = false
   } catch (err: any) {
     setErrors(toErrorMap(err))
@@ -42,7 +44,7 @@ async function createServer(values: any, { setErrors }: any) {
                   v-slot="{ isSubmitting }"
                   class="pt-6"
                   :validation-schema="ServerSchema"
-                  @submit="createServer"
+                  @submit="handleCreateServer"
                 >
                   <DialogClose
                     class="absolute right-3 top-3 grid h-8 w-8 place-items-center text-gray-300 transition-colors hover:text-gray-200"

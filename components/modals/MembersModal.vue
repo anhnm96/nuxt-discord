@@ -6,9 +6,11 @@ import type { ServerWithDetails } from '~/types'
 
 const { $api } = useNuxtApp()
 const route = useRoute()
+const serverId = route.params.sid
 const queryClient = useQueryClient()
 const server = queryClient.getQueryData<ServerWithDetails>([
-  cKey(route.params.sid as string),
+  serversKey,
+  serverId,
 ])
 if (!server)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
@@ -21,7 +23,7 @@ async function changeRole(memberId: string, role: MemberRole) {
       method: 'PATCH',
       body: { role },
     })
-    refreshNuxtData(`server-${route.params.sid}`)
+    refreshNuxtData(`server-${serverId}`)
   } catch (err) {
     console.error(err)
   } finally {
@@ -97,7 +99,7 @@ const roleIconMap = {
                           class="grid h-8 w-8 select-none place-items-center rounded-full bg-brand"
                         >
                           <AvatarImage
-                            :src="member.profile.imageUrl"
+                            :src="member.profile.imageUrl || ''"
                             :alt="member.profile.username"
                           />
                           <AvatarFallback>{{

@@ -5,9 +5,11 @@ import type { ServerWithDetails } from '~/types'
 
 const open = ref(false)
 const route = useRoute()
+const serverId = route.params.sid as string
 const queryClient = useQueryClient()
 const server = queryClient.getQueryData<ServerWithDetails>([
-  cKey(route.params.sid as string),
+  serversKey,
+  serverId,
 ])
 if (!server)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
@@ -29,16 +31,15 @@ async function handleDeleteServer() {
 const { $api } = useNuxtApp()
 async function handleEditServer(values: any, { setErrors }: any) {
   try {
-    await $api(`/servers/${route.params.sid}`, {
+    await $api(`/servers/${serverId}`, {
       method: 'PATCH',
       body: values,
     })
-    refreshNuxtData('servers')
-    refreshNuxtData(`server-${route.params.sid}`)
+    queryClient.invalidateQueries({ queryKey: [serversKey, serverId] })
     open.value = false
   } catch (err: any) {
     console.error(err)
-    // setErrors(toErrorMap(err))
+    setErrors(toErrorMap(err))
   }
 }
 

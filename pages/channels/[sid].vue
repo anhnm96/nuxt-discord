@@ -23,7 +23,7 @@ if (!server.value)
 if (!route.params.cid) {
   const defaultChannel = server.value.categories[0].channels[0]
 
-  navigateTo(`/channels/${route.params.sid}/${defaultChannel.id}`, {
+  navigateTo(`/channels/${serverId}/${defaultChannel.id}`, {
     replace: true,
   })
 }
@@ -243,7 +243,7 @@ const iconMap = {
               })"
               :key="channel.id"
               v-slot="{ isActive, href, navigateTo }"
-              :to="`/channels/${$route.params.sid}/${channel.id}`"
+              :to="`/channels/${serverId}/${channel.id}`"
             >
               <a
                 :href="href"
