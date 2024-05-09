@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MessageWithMember } from '@/types'
+import { deleteMessage, updateMessage } from '~/api/handlers/messages'
 
 const props = defineProps<{
   message: MessageWithMember
@@ -40,10 +41,7 @@ function submitEditMessage() {
     cancelEditMessage()
     return
   }
-  useAPI(`/socket/messages/${props.message.id}?${props.urlQuery}`, {
-    method: 'PATCH',
-    body: { content },
-  })
+  updateMessage(props.message.id, props.urlQuery, content)
   cancelEditMessage()
 }
 
@@ -67,10 +65,8 @@ function handleKeydownEvent(e: KeyboardEvent) {
   }
 }
 
-function deleteMessage() {
-  useAPI(`/socket/messages/${props.message.id}?${props.urlQuery}`, {
-    method: 'DELETE',
-  })
+function handleDeleteMessage() {
+  deleteMessage(props.message.id, props.urlQuery)
 }
 
 const [DefineMessageTemplate, ReuseMessageTemplate] = createReusableTemplate<{
@@ -112,7 +108,7 @@ const [DefineMessageTemplate, ReuseMessageTemplate] = createReusableTemplate<{
       <ChatActions
         :message="message"
         @edit="enableEdit"
-        @delete="deleteMessage"
+        @delete="handleDeleteMessage"
       />
     </DefineMessageTemplate>
     <div

@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/vue-query'
 import type { MessageWithMember } from '@/types'
+import { getMessages } from '~/api/handlers/messages'
 
 interface ChatQueryProps {
   queryKey: string
@@ -19,10 +20,8 @@ export function useChatQuery({
   paramKey,
   paramValue,
 }: ChatQueryProps) {
-  const { $api } = useNuxtApp()
-
   const fetchMessages = ({ pageParam }: any): any => {
-    return $api(`${apiUrl}?cursor=${pageParam}&${paramKey}=${paramValue}`)
+    return getMessages(apiUrl, pageParam, paramKey, paramValue)
   }
 
   return useInfiniteQuery<InfiniteMessage, Error>({

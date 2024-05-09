@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { sendMessage } from '~/api/handlers/messages'
+
 const route = useRoute()
 const serverId = route.params.sid as string
 const channelId = route.params.cid as string
@@ -77,10 +79,7 @@ function handleSendMessage(e: KeyboardEvent) {
   isTyping.value = false
   socket.emit('stopTyping', channelId, userStore.user?.username)
   clearTimeout(timeout)
-  useAPI(`/socket/messages?serverId=${serverId}&channelId=${channelId}`, {
-    method: 'POST',
-    body: { content: textEl.innerText.trim() },
-  })
+  sendMessage(serverId, channelId, textEl.innerText.trim())
   // update message
   // cache.setQueryData(`messages-${channelId}`, (d: any) => {
   //   if (!d) return
