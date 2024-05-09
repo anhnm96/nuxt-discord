@@ -33,17 +33,20 @@ const {
 await suspense()
 
 useChatSocket({ queryKey, addKey, updateKey, deleteKey })
-// useChatScroll({
-//   chatRef,
-//   bottomRef,
-//   loadMore: fetchNextPage,
-//   shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
-//   count: data?.pages?.[0]?.items?.length ?? 0,
-// })
+const chatRef = ref()
+const bottomRef = ref()
+useChatScroll({
+  chatRef,
+  bottomRef,
+  loadMore: fetchNextPage,
+  shouldLoadMore: computed(
+    () => !isFetchingNextPage.value && !!hasNextPage.value,
+  ),
+})
 </script>
 
 <template>
-  <div class="flex">
+  <div ref="chatRef" class="flex">
     <div
       v-if="status === 'pending'"
       class="flex flex-1 flex-col items-center justify-center"
@@ -71,7 +74,20 @@ useChatSocket({ queryKey, addKey, updateKey, deleteKey })
       class="mt-auto flex flex-1 flex-col-reverse"
     >
       <!-- intro -->
-      <div class="m-4 h-px bg-divider"></div>
+      <template v-for="(group, groupIndex) in messages.pages" :key="groupIndex">
+        <ChatItem
+          v-for="(message, i) in group.items"
+          :key="message.id"
+          :message="message"
+          :show-header="
+            i === group.items.length - 1 ||
+            message.memberId !== group.items[i + 1].memberId ||
+            !isSameHour(message.createdAt, group.items[i + 1].createdAt)
+          "
+          :url-query="`serverId=${serverId}&channelId=${chatId}`"
+        />
+      </template>
+      <div class="mt-4 h-px bg-divider"></div>
       <div class="select-none space-y-2 px-4 pt-4">
         <div>
           <img
@@ -99,19 +115,7 @@ useChatSocket({ queryKey, addKey, updateKey, deleteKey })
           </p>
         </template>
       </div>
-      <template v-for="(group, groupIndex) in messages.pages" :key="groupIndex">
-        <ChatItem
-          v-for="(message, i) in group.items"
-          :key="message.id"
-          :message="message"
-          :show-header="
-            i === group.items.length - 1 ||
-            message.memberId !== group.items[i + 1].memberId ||
-            !isSameHour(message.createdAt, group.items[i + 1].createdAt)
-          "
-          :url-query="`serverId=${serverId}&channelId=${chatId}`"
-        />
-      </template>
     </div>
+    <div ref="bottomRef"></div>
   </div>
 </template>
