@@ -3,10 +3,10 @@ import type { MemberRole } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
 import { Icon } from '#components'
 import type { ServerWithDetails } from '~/types'
+import { changeRole, kick } from '~/api/handlers/members'
 
-const { $api } = useNuxtApp()
 const route = useRoute()
-const serverId = route.params.sid
+const serverId = route.params.sid as string
 const queryClient = useQueryClient()
 const server = queryClient.getQueryData<ServerWithDetails>([
   serversKey,
@@ -16,14 +16,11 @@ if (!server)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
 const loadingId = ref('')
 
-async function changeRole(memberId: string, role: MemberRole) {
+async function handleChangeRole(memberId: string, role: MemberRole) {
   try {
     loadingId.value = memberId
-    await $api(`/members/${memberId}?serverId=${server!.id}`, {
-      method: 'PATCH',
-      body: { role },
-    })
-    refreshNuxtData(`server-${serverId}`)
+    await changeRole(memberId, serverId, role)
+    queryClient.invalidateQueries({ queryKey: [serversKey, serverId] })
   } catch (err) {
     console.error(err)
   } finally {
@@ -31,13 +28,11 @@ async function changeRole(memberId: string, role: MemberRole) {
   }
 }
 
-async function kick(memberId: string) {
+async function handleKick(memberId: string) {
   try {
     loadingId.value = memberId
-    await $api(`/members/${memberId}?serverId=${server!.id}`, {
-      method: 'DELETE',
-    })
-    refreshNuxtData(`server-${route.params.sid}`)
+    await kick(memberId, serverId)
+    queryClient.invalidateQueries({ queryKey: [serversKey, serverId] })
   } catch (err) {
     console.error(err)
   } finally {
@@ -151,7 +146,9 @@ const roleIconMap = {
                                     >
                                       <DropdownMenuItem
                                         class="flex cursor-pointer items-center rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
-                                        @click="changeRole(member.id, 'GUEST')"
+                                        @click="
+                                          handleChangeRole(member.id, 'GUEST')
+                                        "
                                       >
                                         <Icon
                                           class="mr-2"
@@ -167,7 +164,10 @@ const roleIconMap = {
                                       <DropdownMenuItem
                                         class="flex cursor-pointer items-center rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
                                         @click="
-                                          changeRole(member.id, 'MODERATOR')
+                                          handleChangeRole(
+                                            member.id,
+                                            'MODERATOR',
+                                          )
                                         "
                                       >
                                         <Icon
@@ -189,10 +189,10 @@ const roleIconMap = {
                                 />
                                 <DropdownMenuItem
                                   class="flex cursor-pointer items-center rounded-sm px-2 py-1.5 hover:bg-brand-560 hover:text-white"
-                                  @click="kick(member.id)"
+                                  @click="handleKick(member.id)"
                                 >
                                   <Icon class="mr-2" name="lucide:gavel" />
-                                  <span>Kick</span>
+                                  <span>handleKick</span>
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenuPortal>
