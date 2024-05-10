@@ -1,38 +1,21 @@
 import type { Channel } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
 
-export default function useChannelSocket(
-  serverId: string,
-  channelQueryKey: string,
-) {
+export default function useChannelSocket(serverId: string) {
   const cache = useQueryClient()
   const { socket } = useSocket()
 
   onMounted(() => {
     socket.emit('joinServer', serverId)
+    const channelQueryKey = cKey(serverId)
 
     socket.on('add_channel', (newChannel) => {
       console.log('add_channel', newChannel)
-      cache.invalidateQueries({ queryKey: [channelQueryKey] })
-      // cache.setQueryData(key, (data) => {
-      //   return [...data, newChannel];
-      // });
+      cache.setQueryData([channelsKey, newChannel.id], newChannel)
     })
 
     socket.on('edit_channel', (editedChannel: Channel) => {
-      console.log('edit_channel', editedChannel)
-      cache.invalidateQueries({ queryKey: [channelQueryKey] })
-      // cache.setQueryData([channelQueryKey], (d: Channel[] | undefined): any => {
-      //   if (!d) return
-      //   const res = [...d]
-      //   const index = res.findIndex((c) => c.id === editedChannel.id)
-      //   if (index !== -1) {
-      //     res[index] = editedChannel
-      //   } else if (editedChannel.isPublic) {
-      //     res.push(editedChannel)
-      //   }
-      //   return res
-      // })
+      cache.setQueryData([channelsKey, editedChannel.id], editedChannel)
     })
 
     socket.on('delete_channel', (deleteId: string) => {

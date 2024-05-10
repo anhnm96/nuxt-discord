@@ -18,7 +18,7 @@ const serverId = route.params.sid as string
 const queryClient = useQueryClient()
 const { data: server, suspense } = useGetServetDetails(serverId)
 await suspense()
-useChannelSocket(serverId, cKey(serverId))
+useChannelSocket(serverId)
 
 if (!server.value)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })

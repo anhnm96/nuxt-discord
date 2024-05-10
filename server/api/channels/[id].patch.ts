@@ -67,6 +67,6 @@ export default defineEventHandler(async (event) => {
     },
   })
 
-  socketServer.io?.to(serverId).emit('edit_channel', category)
-  return category
+  socketServer.io?.to(serverId).emit('edit_channel', category.channels[0])
+  return category.channels[0]
 })

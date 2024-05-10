@@ -35,9 +35,11 @@ export const useChannelStore = defineStore('channel-store', {
   },
 })
 
+export const channelsKey = 'channels'
+
 export function useGetCurrentChannel(channelId: string) {
   return useQuery({
-    queryKey: [`channels-${channelId}`],
+    queryKey: [channelsKey, channelId],
     queryFn: () => getChannel(channelId),
   })
 }

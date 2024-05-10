@@ -47,6 +47,6 @@ export default defineEventHandler(async (event) => {
     },
   })
 
-  socketServer.io?.to(serverId).emit('add_channel', category)
-  return category
+  socketServer.io?.to(serverId).emit('add_channel', category.channels[0])
+  return category.channels[0]
 })

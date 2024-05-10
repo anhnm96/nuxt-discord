@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/vue-query'
+import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import type { Server } from '@prisma/client'
 import {
   getServerDetails,
@@ -25,8 +25,22 @@ export function useGetServerMembers(serverId: string) {
 }
 
 export function useGetServetDetails(serverId: string) {
+  const queryClient = useQueryClient()
   return useQuery({
     queryKey: [serversKey, serverId],
-    queryFn: () => getServerDetails(serverId),
+    queryFn: async () => {
+      const data = await getServerDetails(serverId)
+      data.categories.forEach((category) => {
+        // queryClient.setQueryData(
+        //   ['categories', category.id, 'channels'],
+        //   category,
+        // )
+        category.channels.forEach((channel) => {
+          queryClient.setQueryData([channelsKey, channel.id], channel)
+        })
+      })
+
+      return data
+    },
   })
 }
