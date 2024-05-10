@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import type { Channel } from '@prisma/client'
 import { ChannelType } from '@prisma/client'
+import { useQueryClient } from '@tanstack/vue-query'
 import type { CategoryWithChannels } from '@/types'
 import { useGetServetDetails } from '~/stores/server'
 import useChannelSocket from '~/api/ws/useChannelSocket'
+import { deleteServer, leaveServer } from '~/api/handlers/servers'
+import { deleteChannel } from '~/api/handlers/channels'
 
 definePageMeta({
   middleware: ['auth'],
@@ -11,8 +14,8 @@ definePageMeta({
 })
 
 const route = useRoute()
-
 const serverId = route.params.sid as string
+const queryClient = useQueryClient()
 const { data: server, suspense } = useGetServetDetails(serverId)
 await suspense()
 useChannelSocket(serverId, cKey(serverId))
@@ -45,46 +48,45 @@ const foundMember = server.value.members.find(
 )
 if (foundMember) channelStore.setCurrentMember(foundMember)
 
-const { $api } = useNuxtApp()
 const { open } = useDialog()
-async function deleteServer() {
+async function handleDeleteServer() {
   const answer = await open({
     title: `Delete server "${server.value?.name}"`,
     content: `Are you sure you want to delete "${server.value?.name}"? This action cannot be undone.`,
     okText: 'Delete Server',
   })
   if (answer === 'confirm') {
-    await $api(`servers/${server.value?.id}`, { method: 'DELETE' })
-    refreshNuxtData('servers')
+    await deleteServer(serverId)
+    queryClient.invalidateQueries({ queryKey: [serversKey] })
     navigateTo('/')
   }
 }
 
-async function leaveServer() {
+async function handleLeaveServer() {
   const answer = await open({
     title: `Leave "${server.value?.name}"`,
     content: `Are you sure you want to leave "${server.value?.name}"? You won't be able to re-join this server unless you are re-invited.`,
     okText: 'Leave Server',
   })
   if (answer === 'confirm') {
-    await $api(`servers/${server.value?.id}/leave`, { method: 'PATCH' })
-    refreshNuxtData('servers')
+    await leaveServer(serverId)
+    queryClient.invalidateQueries({ queryKey: [serversKey] })
     navigateTo('/')
   }
 }
 
-async function deleteChannel(category: CategoryWithChannels, channel: Channel) {
+async function handleDeleteChannel(
+  category: CategoryWithChannels,
+  channel: Channel,
+) {
   const answer = await open({
     title: `Delete Channel`,
     content: `Are you sure you want to delete "#${channel.name}"? This cannot be undone.`,
     okText: 'Delete Channel',
   })
   if (answer === 'confirm') {
-    await $api(
-      `/channels/${channel.id}?serverId=${server.value?.id}&categoryId=${category.id}`,
-      { method: 'DELETE' },
-    )
-    refreshNuxtData(`server-${server.value?.id}`)
+    await deleteChannel(channel.id, serverId, category.id)
+    queryClient.invalidateQueries({ queryKey: [serversKey, serverId] })
     if (route.params.cid[0] === channel.id) {
       if (category.channels.length > 1) {
         const c = category.channels.find((c) => c.id !== channel.id)
@@ -134,14 +136,14 @@ const dropdownMenu = [
     component: '',
     label: 'Delete Server',
     icon: 'lucide:trash',
-    click: () => deleteServer(),
+    click: () => handleDeleteServer(),
   },
   {
     show: !channelStore.isAdmin,
     component: '',
     label: 'Leave Settings',
     icon: 'lucide:log-out',
-    click: () => leaveServer(),
+    click: () => handleLeaveServer(),
   },
 ]
 
@@ -283,7 +285,7 @@ const iconMap = {
                   <button
                     aria-label="Delete Channel"
                     class="text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"
-                    @click.prevent="deleteChannel(category, channel)"
+                    @click.prevent="handleDeleteChannel(category, channel)"
                   >
                     <Icon size="16px" name="lucide:trash" />
                   </button>

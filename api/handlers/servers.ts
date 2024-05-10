@@ -3,10 +3,18 @@ import type { MemberWithProfile, ServerWithDetails } from '~/types'
 import type { ServerPayload } from '~/validations/server'
 
 export function createServer(payload: ServerPayload) {
-  return useAPI<Server>('/servers', {
+  return useNuxtApp().$api<Server>('/servers', {
     method: 'POST',
     body: payload,
   })
+}
+
+export function leaveServer(id: string) {
+  return useNuxtApp().$api(`servers/${id}/leave`, { method: 'PATCH' })
+}
+
+export function deleteServer(id: string) {
+  return useNuxtApp().$api(`servers/${id}`, { method: 'DELETE' })
 }
 
 export function getUserServers() {

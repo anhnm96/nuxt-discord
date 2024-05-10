@@ -33,3 +33,14 @@ export function updateChannel(
     },
   )
 }
+
+export function deleteChannel(
+  channelId: string,
+  serverId: string,
+  categoryId: string,
+) {
+  return useNuxtApp().$api(
+    `/channels/${channelId}?serverId=${serverId}&categoryId=${categoryId}`,
+    { method: 'DELETE' },
+  )
+}
