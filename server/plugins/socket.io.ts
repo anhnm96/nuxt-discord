@@ -13,14 +13,6 @@ export default defineNitroPlugin((nitroApp: NitroApp) => {
   socketServer.io.bind(engine)
 
   socketServer.io.on('connection', (socket: Socket) => {
-    socket.on('message', async (message: any) => {
-      socketServer.io?.emit('message', {
-        type: 'user',
-        author: message.author,
-        content: message.content,
-      })
-    })
-
     socket.on('toggleOnline', async () => {
       // @ts-expect-error
       const id = socket.request.context.auth.sub
@@ -79,6 +71,7 @@ export default defineNitroPlugin((nitroApp: NitroApp) => {
 
     socket.on('leaveServer', (serverId: string) => {
       socket.leave(serverId)
+      // TODO: update last seen of the member
     })
 
     async function setOnlineStatus(id: string, status: boolean) {

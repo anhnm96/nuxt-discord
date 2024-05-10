@@ -19,7 +19,9 @@ export default defineEventHandler(async (event) => {
   if (!channelId)
     return createError({ statusMessage: 'Channel ID missing', status: 400 })
 
-  const name = await readValidatedBody(event, ChannelSchema.shape.name.parse)
+  const name = await readValidatedBody(event, (body: any) =>
+    ChannelSchema.shape.name.parse(body.name),
+  )
 
   if (name === 'general')
     return createError({
@@ -55,6 +57,12 @@ export default defineEventHandler(async (event) => {
             name,
           },
         },
+      },
+    },
+    include: {
+      channels: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
       },
     },
   })

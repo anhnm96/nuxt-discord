@@ -39,7 +39,14 @@ export default defineEventHandler(async (event) => {
         create: [{ name, profileId: event.context.auth.sub, type }],
       },
     },
+    include: {
+      channels: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+      },
+    },
   })
+
   socketServer.io?.to(serverId).emit('add_channel', category)
   return category
 })
