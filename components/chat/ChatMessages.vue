@@ -9,12 +9,12 @@ defineProps<{
 
 const route = useRoute()
 const serverId = route.params.sid as string
-const chatId = route.params.cid as string
+const channelId = route.params.cid as string
 
-const queryKey = `chat:${chatId}`
-const addKey = `chat:${chatId}:messages`
-const updateKey = `chat:${chatId}:messages:update`
-const deleteKey = `chat:${chatId}:messages:delete`
+const queryKey = `chat:${channelId}`
+const addKey = `chat:${channelId}:messages`
+const updateKey = `chat:${channelId}:messages:update`
+const deleteKey = `chat:${channelId}:messages:delete`
 
 const {
   data: messages,
@@ -27,12 +27,12 @@ const {
   queryKey,
   apiUrl: '/messages',
   paramKey: 'channelId',
-  paramValue: chatId,
+  paramValue: channelId,
 })
 
 await suspense()
 
-useChatSocket({ queryKey, addKey, updateKey, deleteKey })
+useChatSocket({ channelId, queryKey, addKey, updateKey, deleteKey })
 const chatRef = ref()
 const bottomRef = ref()
 useChatScroll({
@@ -84,7 +84,7 @@ useChatScroll({
             message.memberId !== group.items[i + 1].memberId ||
             !isSameHour(message.createdAt, group.items[i + 1].createdAt)
           "
-          :url-query="`serverId=${serverId}&channelId=${chatId}`"
+          :url-query="`serverId=${serverId}&channelId=${channelId}`"
         />
       </template>
       <div class="mt-4 h-px bg-divider"></div>

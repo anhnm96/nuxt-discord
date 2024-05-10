@@ -1,5 +1,6 @@
 import type { NitroApp } from 'nitropack'
 import { Server as Engine } from 'engine.io'
+import type { Socket } from 'socket.io'
 import { Server } from 'socket.io'
 import { defineEventHandler } from 'h3'
 import db from '@/lib/prisma'
@@ -11,7 +12,7 @@ export default defineNitroPlugin((nitroApp: NitroApp) => {
 
   socketServer.io.bind(engine)
 
-  socketServer.io.on('connection', (socket) => {
+  socketServer.io.on('connection', (socket: Socket) => {
     socket.on('message', async (message: any) => {
       socketServer.io?.emit('message', {
         type: 'user',
@@ -64,6 +65,14 @@ export default defineNitroPlugin((nitroApp: NitroApp) => {
       })
     })
 
+    socket.on('startTyping', (channelId, username) => {
+      socket.to(channelId).emit('addToTyping', username)
+    })
+
+    socket.on('stopTyping', (channelId, username) => {
+      socket.to(channelId).emit('removeFromTyping', username)
+    })
+
     socket.on('joinServer', (serverId: string) => {
       socket.join(serverId)
     })
@@ -82,6 +91,24 @@ export default defineNitroPlugin((nitroApp: NitroApp) => {
         },
       })
     }
+
+    socket.on('joinChannel', async (channelId) => {
+      // @ts-expect-error
+      const userId = socket.request.context.auth.sub
+      const channel = await db.server.findFirst({
+        where: {
+          members: { some: { profileId: userId } },
+          categories: { some: { channels: { some: { id: channelId } } } },
+        },
+      })
+
+      if (!channel) throw createError({ statusMessage: 'Channel not found' })
+      socket.join(channelId)
+    })
+
+    socket.on('leaveRoom', (id) => {
+      socket.leave(id)
+    })
   })
 
   nitroApp.router.use(

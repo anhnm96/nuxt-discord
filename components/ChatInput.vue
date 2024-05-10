@@ -116,7 +116,7 @@ const typingString = computed(() => {
 </script>
 
 <template>
-  <p v-show="typingString" class="absolute -top-4 left-4 text-xs italic">
+  <p v-show="typingString" class="absolute -top-px left-4 text-xs italic">
     {{ typingString }}...
   </p>
   <div class="flex rounded-lg bg-textarea">

@@ -2,6 +2,7 @@ import type { Member, Message, Profile } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
 
 interface ChatSocketProps {
+  channelId: string
   addKey: string
   updateKey: string
   deleteKey: string
@@ -15,18 +16,22 @@ type MessageWithMemberWithProfile = Message & {
 }
 
 export function useChatSocket({
+  channelId,
   addKey,
   updateKey,
   deleteKey,
   queryKey,
 }: ChatSocketProps) {
   const { socket } = useSocket()
+  const authStore = useAuthStore()
+  const channelStore = useChannelStore()
   const queryClient = useQueryClient()
 
   onMounted(() => {
     if (!socket) {
       return
     }
+    socket.emit('joinChannel', channelId)
 
     socket.on(updateKey, (message: MessageWithMemberWithProfile) => {
       queryClient.setQueryData([queryKey], (oldData: any) => {
@@ -101,10 +106,25 @@ export function useChatSocket({
       })
     })
 
-    return () => {
-      socket.off(addKey)
-      socket.off(updateKey)
-      socket.off(deleteKey)
-    }
+    socket.on('addToTyping', (username: string) => {
+      if (username !== authStore.user?.username) {
+        channelStore.addTyping(username)
+      }
+    })
+
+    socket.on('removeFromTyping', (username: string) => {
+      if (username !== authStore.user?.username) {
+        channelStore.removeTyping(username)
+      }
+    })
+  })
+
+  onBeforeUnmount(() => {
+    socket.emit('leaveRoom', channelId)
+    socket.off(addKey)
+    socket.off(updateKey)
+    socket.off(deleteKey)
+    socket.off('addToTyping')
+    socket.off('removeFromTyping')
   })
 }
