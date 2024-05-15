@@ -15,6 +15,7 @@ definePageMeta({
     <div class="flex-1 space-y-2 overflow-y-auto p-3 font-medium text-gray-300">
       <p class="text-white">Friends</p>
     </div>
+    <UserPanel />
   </div>
 
   <div class="flex flex-1 flex-col bg-gray-700"></div>

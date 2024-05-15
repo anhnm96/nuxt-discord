@@ -44,7 +44,7 @@ export const useAuthStore = defineStore('auth-store', () => {
     user.value = null
     queryClient.clear()
     localStorage.clear()
-    navigateTo('/')
+    navigateTo('/login')
   }
 
   return { user, login, register, logout }

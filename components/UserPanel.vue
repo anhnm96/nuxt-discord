@@ -13,18 +13,18 @@ const authStore = useAuthStore()
       </div>
       <div class="flex flex-shrink-0">
         <button
-          class="hover:bg-modifier-selected grid h-8 w-8 place-items-center rounded text-gray-400 hover:text-gray-300"
+          class="grid h-8 w-8 place-items-center rounded text-gray-400 hover:bg-modifier-selected hover:text-gray-300"
         >
           <Icon size="20px" name="mdi:microphone" />
         </button>
         <button
-          class="hover:bg-modifier-selected grid h-8 w-8 place-items-center rounded text-gray-400 hover:text-gray-300"
+          class="grid h-8 w-8 place-items-center rounded text-gray-400 hover:bg-modifier-selected hover:text-gray-300"
         >
           <Icon size="20px" name="mdi:volume-high" />
         </button>
         <DropdownMenuRoot>
           <DropdownMenuTrigger
-            class="hover:bg-modifier-selected grid h-8 w-8 place-items-center rounded text-gray-400 hover:text-gray-300"
+            class="grid h-8 w-8 place-items-center rounded text-gray-400 hover:bg-modifier-selected hover:text-gray-300"
             aria-label="settings"
           >
             <Icon size="20px" name="mdi:cog" />
