@@ -1,4 +1,5 @@
 import db from '@/lib/prisma'
+import socketServer from '~/lib/socket'
 
 export default defineEventHandler(async (event) => {
   const serverId = getRouterParam(event, 'id')
@@ -27,5 +28,9 @@ export default defineEventHandler(async (event) => {
     },
   })
 
+  socketServer.io?.to(serverId).emit('remove_member', event.context.auth.sub)
+  // socketServer.io
+  //   ?.to(event.context.auth.sub)
+  //   .emit('remove_from_guild', serverId)
   return server
 })

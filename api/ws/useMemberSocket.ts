@@ -46,12 +46,15 @@ export default function useMemberSocket(serverId: string) {
     //   })
     // })
 
-    // socket.on('remove_member', (memberId: string) => {
-    //   console.log('remove_member', memberId)
-    //   cache.setQueryData(key, (data: User[] | undefined): any => {
-    //     if (!data) return
-    //     return [...data?.filter((m) => m.id !== memberId)]
-    //   })
-    // })
+    socket.on('remove_member', (profileId: string) => {
+      console.log('remove_member', profileId)
+      cache.setQueryData(
+        [serversKey, serverId, 'members'],
+        (data: MemberWithProfile[] | undefined): any => {
+          if (!data) return
+          return data.filter((m) => m.profileId !== profileId)
+        },
+      )
+    })
   })
 }
