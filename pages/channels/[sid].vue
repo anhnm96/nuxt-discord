@@ -105,7 +105,7 @@ async function handleDeleteChannel(
 const modalStore = useModalStore()
 const dropdownMenu = [
   {
-    show: channelStore.isModerator,
+    show: channelStore.isAdmin || channelStore.isModerator,
     component: resolveComponent('InviteModal'),
     label: 'Invite People',
     icon: 'material-symbols:person-add',
