@@ -1,4 +1,5 @@
 import db from '@/lib/prisma'
+import socketServer from '~/lib/socket'
 
 interface UpdateServerDto {
   name: string
@@ -18,6 +19,17 @@ export default defineEventHandler(async (event) => {
       name,
       imageUrl,
     },
+  })
+
+  // emit socket
+  const members = await db.member.findMany({
+    where: {
+      serverId,
+    },
+  })
+
+  members.forEach((m) => {
+    socketServer.io?.to(m.profileId).emit('edit_server', server)
   })
 
   return server

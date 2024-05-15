@@ -18,6 +18,7 @@ const serverId = route.params.sid as string
 const queryClient = useQueryClient()
 const { data: server, suspense } = useGetServerDetails(serverId)
 await suspense()
+useServerSocket()
 useChannelSocket(serverId)
 
 if (!server.value)

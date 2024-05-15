@@ -74,6 +74,10 @@ export default defineNitroPlugin((nitroApp: NitroApp) => {
       // TODO: update last seen of the member
     })
 
+    socket.on('joinUser', (profileId: string) => {
+      socket.join(profileId)
+    })
+
     async function setOnlineStatus(id: string, status: boolean) {
       return db.profile.update({
         where: {

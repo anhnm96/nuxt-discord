@@ -17,17 +17,6 @@ const formValues = {
   name: server.name,
 }
 
-async function handleDeleteServer() {
-  // const answer = await open({
-  //   title: `Delete server "${server.value.name}"`,
-  //   content: `Are you sure you want to delete "${server.value.name}"? This cannot be undone.`,
-  //   okText: 'Delete Server',
-  // })
-  // if (answer === 'confirm') {
-  //   deleteGuild(server.value.id)
-  // }
-}
-
 const { $api } = useNuxtApp()
 async function handleEditServer(values: any, { setErrors }: any) {
   try {
@@ -138,12 +127,6 @@ async function handleInvalidateInvites() {
                           Bans
                         </button>
                       </div>
-                      <button
-                        class="px-4 py-2 text-red-400 hover:underline"
-                        @click="handleDeleteServer"
-                      >
-                        Delete Server
-                      </button>
                     </div>
                   </main>
                   <footer>
