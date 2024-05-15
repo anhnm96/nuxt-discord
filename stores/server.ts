@@ -24,7 +24,7 @@ export function useGetServerMembers(serverId: string) {
   })
 }
 
-export function useGetServetDetails(serverId: string) {
+export function useGetServerDetails(serverId: string) {
   const queryClient = useQueryClient()
   return useQuery({
     queryKey: [serversKey, serverId],

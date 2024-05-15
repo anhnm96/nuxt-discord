@@ -3,7 +3,11 @@ import db from '@/lib/prisma'
 export default defineEventHandler(async (event) => {
   const { inviteCode } = await readBody(event)
 
-  if (!inviteCode) return { serverId: null }
+  if (!inviteCode)
+    throw createError({
+      statusCode: 400,
+      statusText: 'Invalid link',
+    })
 
   const existingServer = await db.server.findFirst({
     where: {
@@ -18,22 +22,27 @@ export default defineEventHandler(async (event) => {
 
   if (existingServer) return { serverId: existingServer.id }
 
-  const server = await db.server.update({
-    where: {
-      inviteCode,
-    },
-    data: {
-      members: {
-        create: [
-          {
-            profileId: event.context.auth.sub,
-          },
-        ],
+  try {
+    const server = await db.server.update({
+      where: {
+        inviteCode,
       },
-    },
-  })
+      data: {
+        members: {
+          create: [
+            {
+              profileId: event.context.auth.sub,
+            },
+          ],
+        },
+      },
+    })
 
-  if (server) return { serverId: server.id }
-
-  return { serverId: null }
+    return { serverId: server.id }
+  } catch (err) {
+    throw createError({
+      statusCode: 404,
+      statusText: 'Invalid link or the server got deleted',
+    })
+  }
 })

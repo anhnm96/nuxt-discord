@@ -3,7 +3,7 @@ import type { Channel } from '@prisma/client'
 import { ChannelType } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
 import type { CategoryWithChannels } from '@/types'
-import { useGetServetDetails } from '~/stores/server'
+import { useGetServerDetails } from '~/stores/server'
 import useChannelSocket from '~/api/ws/useChannelSocket'
 import { deleteServer, leaveServer } from '~/api/handlers/servers'
 import { deleteChannel } from '~/api/handlers/channels'
@@ -16,7 +16,7 @@ definePageMeta({
 const route = useRoute()
 const serverId = route.params.sid as string
 const queryClient = useQueryClient()
-const { data: server, suspense } = useGetServetDetails(serverId)
+const { data: server, suspense } = useGetServerDetails(serverId)
 await suspense()
 useChannelSocket(serverId)
 
@@ -141,7 +141,7 @@ const dropdownMenu = [
   {
     show: !channelStore.isAdmin,
     component: '',
-    label: 'Leave Settings',
+    label: 'Leave Server',
     icon: 'lucide:log-out',
     click: () => handleLeaveServer(),
   },
@@ -269,7 +269,10 @@ const iconMap = {
                   :name="iconMap[channel.type as keyof typeof iconMap]"
                 />
                 {{ channel.name }}
-                <div class="ml-auto space-x-1">
+                <div
+                  v-if="channelStore.isAdmin || channelStore.isModerator"
+                  class="ml-auto space-x-1"
+                >
                   <button
                     aria-label="Edit Channel"
                     class="text-gray-200 opacity-0 hover:text-gray-100 group-hover:opacity-100"

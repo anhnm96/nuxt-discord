@@ -9,6 +9,13 @@ export function createServer(payload: ServerPayload) {
   })
 }
 
+export function joinServer(inviteCode: string) {
+  return useNuxtApp().$api<{ serverId: string }>(`servers/join`, {
+    method: 'POST',
+    body: { inviteCode },
+  })
+}
+
 export function leaveServer(id: string) {
   return useNuxtApp().$api(`servers/${id}/leave`, { method: 'PATCH' })
 }

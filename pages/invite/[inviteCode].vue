@@ -1,18 +1,19 @@
 <script setup lang="ts">
+import { useQueryClient } from '@tanstack/vue-query'
+import { joinServer } from '~/api/handlers/servers'
+
 definePageMeta({
   middleware: ['auth'],
 })
 
 const route = useRoute()
-const inviteCode = route.params.inviteCode
-const { $api } = useNuxtApp()
+const inviteCode = route.params.inviteCode as string
+const queryClient = useQueryClient()
+
 onMounted(async () => {
   try {
-    const { serverId } = await $api<{ serverId?: string }>('/servers/join', {
-      method: 'POST',
-      body: { inviteCode },
-    })
-    refreshNuxtData('servers')
+    const { serverId } = await joinServer(inviteCode)
+    queryClient.invalidateQueries({ queryKey: [serversKey] })
     if (serverId) navigateTo(`/channels/${serverId}`, { replace: true })
     else navigateTo('/', { replace: true })
   } catch (err) {
