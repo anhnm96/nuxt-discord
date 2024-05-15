@@ -1,4 +1,5 @@
 import db from '@/lib/prisma'
+import socketServer from '~/lib/socket'
 
 export default defineEventHandler(async (event) => {
   const { inviteCode } = await readBody(event)
@@ -36,7 +37,18 @@ export default defineEventHandler(async (event) => {
           ],
         },
       },
+      include: {
+        members: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          include: {
+            profile: true,
+          },
+        },
+      },
     })
+
+    socketServer.io?.to(server.id).emit('add_member', server.members[0])
 
     return { serverId: server.id }
   } catch (err) {
