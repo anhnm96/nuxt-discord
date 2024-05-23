@@ -40,7 +40,6 @@
     "@vee-validate/zod": "^4.12.2",
     "bcrypt": "^5.1.1",
     "date-fns": "^3.3.1",
-    "emoji-mart-vue-fast": "^15.0.0",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.4",
     "pinia": "^2.1.7",
@@ -48,6 +47,7 @@
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
     "vee-validate": "^4.12.2",
+    "vue3-emoji-picker": "^1.1.8",
     "zod": "^3.22.4"
   }
 }

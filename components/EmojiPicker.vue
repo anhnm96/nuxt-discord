@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import data from 'emoji-mart-vue-fast/data/all.json'
-import 'emoji-mart-vue-fast/css/emoji-mart.css'
-
-// @ts-expect-error
-import { EmojiIndex, Picker } from 'emoji-mart-vue-fast/src'
+import EmojiPicker from 'vue3-emoji-picker'
+import 'vue3-emoji-picker/css'
 
 const emit = defineEmits(['select'])
-const emojiIndex = new EmojiIndex(data)
+
 const open = ref(false)
 function select(emoji: any) {
   open.value = false
-  emit('select', emoji.native)
+  emit('select', emoji.i)
 }
 </script>
 
@@ -28,7 +25,8 @@ function select(emoji: any) {
       :side-offset="-40"
       class="mb-16 border-none bg-transparent shadow-none drop-shadow-none"
     >
-      <Picker :data="emojiIndex" @select="select" />
+      <!-- <Picker :data="emojiIndex" @select="select" /> -->
+      <EmojiPicker :native="true" theme="dark" @select="select" />
     </PopoverContent>
   </PopoverRoot>
 </template>
