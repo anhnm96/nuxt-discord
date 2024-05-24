@@ -1,6 +1,6 @@
-import { ChannelType } from '@prisma/client'
 import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
+import { ChannelType } from '@/types'
 
 export const ChannelSchema = z.object({
   name: z

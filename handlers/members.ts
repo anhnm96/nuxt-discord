@@ -1,9 +1,9 @@
-import type { MemberRole } from '@prisma/client'
+import type { MemberRoleEnum } from '@/types'
 
 export function changeRole(
   memberId: string,
   serverId: string,
-  role: MemberRole,
+  role: MemberRoleEnum,
 ) {
   return useNuxtApp().$api(`/members/${memberId}?serverId=${serverId}`, {
     method: 'PATCH',

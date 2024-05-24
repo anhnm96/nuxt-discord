@@ -1,6 +1,6 @@
 <script setup lang="tsx">
-import type { MemberRole } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
+import type { MemberRoleEnum } from '@/types'
 import { Icon } from '#components'
 import type { ServerWithDetails } from '~/types'
 import { changeRole, kick } from '~/handlers/members'
@@ -16,7 +16,7 @@ if (!server)
   throw createError({ statusCode: 404, statusMessage: 'Server Not Found' })
 const loadingId = ref('')
 
-async function handleChangeRole(memberId: string, role: MemberRole) {
+async function handleChangeRole(memberId: string, role: MemberRoleEnum) {
   try {
     loadingId.value = memberId
     await changeRole(memberId, serverId, role)

@@ -1,11 +1,29 @@
 import type {
   Category,
   Channel,
+  ChannelType as ChannelTypeOrigin,
   Member,
+  MemberRole as MemberRoleOrigin,
   Message,
   Profile,
   Server,
 } from '@prisma/client'
+
+// re-export enum types from prisma
+// due to https://github.com/prisma/prisma/issues/12504
+export const MemberRole: { [k in MemberRoleOrigin]: k } = {
+  ADMIN: 'ADMIN',
+  MODERATOR: 'MODERATOR',
+  GUEST: 'GUEST',
+}
+export type MemberRoleEnum = (typeof MemberRole)[keyof typeof MemberRole]
+
+export const ChannelType: { [k in ChannelTypeOrigin]: k } = {
+  TEXT: 'TEXT',
+  AUDIO: 'AUDIO',
+  VIDEO: 'VIDEO',
+}
+export type ChannelTypeEnum = (typeof ChannelType)[keyof typeof ChannelType]
 
 export interface ActiveUserData {
   /**

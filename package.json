@@ -27,14 +27,14 @@
     "nuxt-icon": "^0.6.6",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
-    "prisma": "^5.7.0",
+    "prisma": "^5.14.0",
     "vue": "^3.4.5",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
     "@faker-js/faker": "^8.3.1",
     "@pinia/nuxt": "^0.5.1",
-    "@prisma/client": "5.7.0",
+    "@prisma/client": "5.14.0",
     "@tanstack/vue-query": "^5.17.19",
     "@vee-validate/nuxt": "^4.12.2",
     "@vee-validate/zod": "^4.12.2",

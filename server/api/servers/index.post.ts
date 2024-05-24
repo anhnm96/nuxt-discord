@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { MemberRole } from '@prisma/client'
+import { MemberRole } from '@/types'
 import db from '@/lib/prisma'
 
 interface CreateServerDto {

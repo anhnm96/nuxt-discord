@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Channel } from '@prisma/client'
-import { ChannelType } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
+import { ChannelType } from '@/types'
 import type { CategoryWithChannels } from '@/types'
 import { useGetServerDetails } from '~/stores/server'
 import { deleteServer, leaveServer } from '~/handlers/servers'

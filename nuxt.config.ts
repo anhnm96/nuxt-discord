@@ -1,3 +1,9 @@
+// import { createRequire } from 'node:module'
+
+// const prismaClientPath = createRequire(import.meta.url).resolve(
+//   '@prisma/client',
+// )
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
@@ -48,8 +54,11 @@ export default defineNuxtConfig({
   vite: {
     resolve: {
       alias: {
-        '.prisma/client/index-browser':
-          './node_modules/@prisma/client/index-browser.js',
+        // https://github.com/prisma/prisma/issues/12504
+        // '.prisma/client/index-browser': prismaClientPath.replace(
+        //   '@prisma/client/default.js',
+        //   '.prisma/client/index-browser.js',
+        // ),
       },
     },
   },

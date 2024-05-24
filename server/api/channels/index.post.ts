@@ -1,4 +1,4 @@
-import { MemberRole } from '@prisma/client'
+import { MemberRole } from '@/types'
 import db from '@/lib/prisma'
 import socketServer from '~/lib/socket'
 import { ChannelSchema } from '~/validations/channel'

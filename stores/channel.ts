@@ -1,5 +1,6 @@
-import { type Member, MemberRole } from '@prisma/client'
+import { type Member } from '@prisma/client'
 import { useQuery } from '@tanstack/vue-query'
+import { MemberRole } from '@/types'
 import { getChannel } from '~/handlers/channels'
 
 interface ChannelState {

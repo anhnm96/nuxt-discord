@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Channel } from '@prisma/client'
-import { ChannelType } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
+import { ChannelType } from '@/types'
 import { createChannel, updateChannel } from '~/handlers/channels'
 import { TypedChannelSchema } from '~/validations/channel'
 
