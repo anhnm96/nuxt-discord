@@ -3,7 +3,7 @@ import type { MemberRole } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
 import { Icon } from '#components'
 import type { ServerWithDetails } from '~/types'
-import { changeRole, kick } from '~/api/handlers/members'
+import { changeRole, kick } from '~/handlers/members'
 
 const route = useRoute()
 const serverId = route.params.sid as string

@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/vue-query'
 import type { MessageWithMember } from '@/types'
-import { getMessages } from '~/api/handlers/messages'
+import { getMessages } from '~/handlers/messages'
 
 interface ChatQueryProps {
   queryKey: string

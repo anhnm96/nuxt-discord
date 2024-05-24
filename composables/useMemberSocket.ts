@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/vue-query'
 import type { MemberWithProfile } from '~/types'
 
-export default function useMemberSocket(serverId: string) {
+export function useMemberSocket(serverId: string) {
   const cache = useQueryClient()
   const { socket } = useSocket()
 

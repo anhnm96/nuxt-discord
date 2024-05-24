@@ -2,7 +2,7 @@
 import type { Channel } from '@prisma/client'
 import { ChannelType } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
-import { createChannel, updateChannel } from '~/api/handlers/channels'
+import { createChannel, updateChannel } from '~/handlers/channels'
 import { TypedChannelSchema } from '~/validations/channel'
 
 const modalStore = useModalStore()

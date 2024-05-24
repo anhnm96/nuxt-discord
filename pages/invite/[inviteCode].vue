@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query'
-import { joinServer } from '~/api/handlers/servers'
+import { joinServer } from '~/handlers/servers'
 
 definePageMeta({
   middleware: ['auth'],

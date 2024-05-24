@@ -1,7 +1,7 @@
 import type { Channel } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
 
-export default function useChannelSocket(serverId: string) {
+export function useChannelSocket(serverId: string) {
   const cache = useQueryClient()
   const { socket } = useSocket()
 

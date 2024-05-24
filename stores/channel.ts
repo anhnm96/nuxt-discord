@@ -1,6 +1,6 @@
 import { type Member, MemberRole } from '@prisma/client'
 import { useQuery } from '@tanstack/vue-query'
-import { getChannel } from '~/api/handlers/channels'
+import { getChannel } from '~/handlers/channels'
 
 interface ChannelState {
   currentMember: Member | null | undefined

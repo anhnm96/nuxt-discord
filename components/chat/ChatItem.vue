@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { MessageWithMember } from '@/types'
-import { deleteMessage, updateMessage } from '~/api/handlers/messages'
+import { deleteMessage, updateMessage } from '~/handlers/messages'
 
 const props = defineProps<{
   message: MessageWithMember

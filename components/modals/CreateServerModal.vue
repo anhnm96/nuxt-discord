@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query'
 import { ServerSchema } from '@/validations/server'
-import { createServer, joinServer } from '~/api/handlers/servers'
+import { createServer, joinServer } from '~/handlers/servers'
 
 const queryClient = useQueryClient()
 const open = ref(false)

@@ -4,7 +4,7 @@ import {
   getServerDetails,
   getServerMembers,
   getUserServers,
-} from '~/api/handlers/servers'
+} from '~/handlers/servers'
 
 export const serversKey = 'servers'
 

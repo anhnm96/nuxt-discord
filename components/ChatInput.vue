@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sendMessage } from '~/api/handlers/messages'
+import { sendMessage } from '~/handlers/messages'
 
 const route = useRoute()
 const serverId = route.params.sid as string

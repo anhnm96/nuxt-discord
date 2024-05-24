@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import useMemberSocket from '~/api/ws/useMemberSocket'
 import type { MemberWithProfile } from '~/types'
 
 defineProps<{

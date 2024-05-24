@@ -4,9 +4,8 @@ import { ChannelType } from '@prisma/client'
 import { useQueryClient } from '@tanstack/vue-query'
 import type { CategoryWithChannels } from '@/types'
 import { useGetServerDetails } from '~/stores/server'
-import useChannelSocket from '~/api/ws/useChannelSocket'
-import { deleteServer, leaveServer } from '~/api/handlers/servers'
-import { deleteChannel } from '~/api/handlers/channels'
+import { deleteServer, leaveServer } from '~/handlers/servers'
+import { deleteChannel } from '~/handlers/channels'
 
 definePageMeta({
   middleware: ['auth'],
