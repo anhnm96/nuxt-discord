@@ -6,7 +6,7 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   rules: {
-    'no-console': 'warn',
+    'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
     'antfu/if-newline': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@stylistic/ts/brace-style': 'off',

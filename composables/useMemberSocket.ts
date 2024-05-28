@@ -50,7 +50,7 @@ export function useMemberSocket(serverId: string) {
     })
 
     socket.on('remove_member', (profileId: string) => {
-      console.log('remove_member', profileId)
+      console.info('remove_member', profileId)
       cache.setQueryData(
         [serversKey, serverId, 'members'],
         (data: MemberWithProfile[] | undefined): any => {

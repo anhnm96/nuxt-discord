@@ -18,6 +18,13 @@ const socket = io({
 })
 
 socket.on('connect', () => {
+  console.info('connect')
+  socket.emit('toggleOnline')
+  isConnected.value = true
+})
+
+socket.on('reconnect', () => {
+  console.info('reconnect')
   socket.emit('toggleOnline')
   isConnected.value = true
 })

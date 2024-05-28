@@ -10,7 +10,7 @@ export function useChannelSocket(serverId: string) {
     const channelQueryKey = cKey(serverId)
 
     socket.on('add_channel', (newChannel) => {
-      console.log('add_channel', newChannel)
+      console.info('add_channel', newChannel)
       cache.setQueryData([channelsKey, newChannel.id], newChannel)
     })
 
