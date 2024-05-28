@@ -17,13 +17,9 @@ const socket = io({
   addTrailingSlash: false,
 })
 
-function onConnect() {
+socket.on('connect', () => {
   socket.emit('toggleOnline')
   isConnected.value = true
-}
-
-socket.on('connect', () => {
-  onConnect()
 })
 
 function onDisconnect() {
@@ -37,11 +33,7 @@ socket.on('disconnect', () => {
 
 window.addEventListener('beforeunload', () => {
   onDisconnect()
-})
-
-onBeforeUnmount(() => {
-  socket.off('connect', onConnect)
-  socket.off('disconnect', onDisconnect)
+  socket.off()
 })
 
 provide(socketKey, { socket, isConnected })

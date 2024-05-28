@@ -51,6 +51,8 @@ export function useChannelSocket(serverId: string) {
 
   onBeforeUnmount(() => {
     socket.emit('leaveServer', serverId)
-    socket.disconnect()
+    socket.off('add_channel')
+    socket.off('edit_channel')
+    socket.off('delete_channel')
   })
 }

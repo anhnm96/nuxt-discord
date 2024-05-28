@@ -37,5 +37,7 @@ export default function useServerSocket() {
 
   onBeforeUnmount(() => {
     socket.emit('leaveRoom', authStore.user?.id)
+    socket.off('edit_server')
+    socket.off('delete_server')
   })
 }

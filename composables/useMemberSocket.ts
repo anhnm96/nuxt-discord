@@ -60,4 +60,11 @@ export function useMemberSocket(serverId: string) {
       )
     })
   })
+
+  onBeforeUnmount(() => {
+    socket.off('toggle_online')
+    socket.off('toggle_offline')
+    socket.off('add_member')
+    socket.off('remove_member')
+  })
 }
