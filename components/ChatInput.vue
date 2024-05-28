@@ -46,6 +46,7 @@ function handleOnInput(e: any) {
 }
 
 function handleAddEmoji(emoji: string) {
+  showPlaceholder.value = false
   const lastNode = inputEl.value?.lastChild
 
   if (lastNode && lastNode.nodeName === 'BR') {
