@@ -25,9 +25,6 @@ export default defineNuxtConfig({
     jwtTokenIssuer: '',
     jwtAccessTokenTtl: '',
     jwtRefreshTokenTtl: '',
-    public: {
-      apiBase: '',
-    },
   },
   components: {
     dirs: [

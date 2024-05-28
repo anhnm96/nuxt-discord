@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { io as ClientIO } from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 const authStore = useAuthStore()
 if (import.meta.client) {
@@ -12,24 +12,36 @@ if (import.meta.client) {
 
 // setup socket
 const isConnected = ref(false)
-const socket = ClientIO(useRuntimeConfig().public.apiBase as string, {
+const socket = io({
   path: '/api/ws',
   addTrailingSlash: false,
 })
 
-socket.on('connect', () => {
+function onConnect() {
   socket.emit('toggleOnline')
   isConnected.value = true
+}
+
+socket.on('connect', () => {
+  onConnect()
 })
 
-socket.on('disconnect', () => {
+function onDisconnect() {
   socket.emit('toggleOffline')
   isConnected.value = false
+}
+
+socket.on('disconnect', () => {
+  onDisconnect()
 })
 
 window.addEventListener('beforeunload', () => {
-  socket.emit('toggleOffline')
-  socket.disconnect()
+  onDisconnect()
+})
+
+onBeforeUnmount(() => {
+  socket.off('connect', onConnect)
+  socket.off('disconnect', onDisconnect)
 })
 
 provide(socketKey, { socket, isConnected })
